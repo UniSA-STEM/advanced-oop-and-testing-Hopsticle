@@ -25,7 +25,9 @@ class ZooManager():
     def __init__(self, all_staff):
         self.staff = all_staff
 
-    def add_staff(self, all_staff):
-        self.staff.append(all_staff)
-
+    def add_staff(self):
         new_staff = Staff.Staff(name=random.choice(Staff.names))
+        print(new_staff)
+        all_staff.append(new_staff)
+
+ZooManager(all_staff)

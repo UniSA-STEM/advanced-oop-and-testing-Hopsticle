@@ -7,11 +7,33 @@ Username: corjy027
 This is my own work as defined by the University's Academic Integrity Policy.
 '''
 
-
+enclosures = []
 
 class Enclosure:
-    def __init__(self, name, cleanliness=100, size=None):
+    def __init__(self, name, environment =None, cleanliness=100, size=None):
         self.name = name
+        self.environment = environment
         self.cleanliness = cleanliness
         self.size = size
+
+    def new_enclosure(self):
+        add_enclosure = Enclosure(self.name, self.environment, self.cleanliness, self.size)
+        enclosures.append(add_enclosure)
+        print(f'New enclosure added to {self.name}, it\'s is a {self.environment} type with a size of {self.size}')
+        return add_enclosure
+
+class Environment(Enclosure):
+    def __init__(self, name, environment =None):
+        Enclosure.__init__(self, name, environment =None)
+        '''Plains, Arctic, Jungle, Swamp, Savannah'''
+
+class SizeEnclosure(Enclosure):
+    def __init__(self, name, size=None):
+        Enclosure.__init__(self, name, size)
+
+
+class Cleanliness(Enclosure):
+    def __init__(self, name, cleanliness=100):
+        Enclosure.__init__(self, name, cleanliness)
+
 
