@@ -10,6 +10,7 @@ This is my own work as defined by the University's Academic Integrity Policy.
 enclosures = []
 environments = ['Plains', 'Arctic', 'Jungle', 'Swamp', 'Savannah', 'Water', 'Forest', 'Brush']
 
+#TODO implement size requirments for enclosure based on animal size
 class Enclosure:
     def __init__(self, name, environment =None, cleanliness=100, size=None):
         self.name = name
@@ -36,4 +37,7 @@ class Cleanliness(Enclosure):
     def __init__(self, name, cleanliness=100):
         Enclosure.__init__(self, name, cleanliness)
 
+#TODO ensure enclosures do not have carnivores with other types of animals, except maybe fish?
+
+#TODO List of all animals within one enclosure work on display and naming convention for enclosures
 

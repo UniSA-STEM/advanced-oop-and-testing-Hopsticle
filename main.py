@@ -32,16 +32,13 @@ all_staff = []
 #
 # ZooManager(all_staff)
 
-
+#TODO implement main and zoom manager functions
 class Zoo:
-    """Manages the collection of Animal objects in the zoo."""
 
     def __init__(self):
-        global all_animals
         self.all_animals = Animal.all_animals
 
     def add_animal(self, animal_object):
-        """Adds an already created concrete Animal instance to the zoo."""
         if not isinstance(animal_object, Animal) or type(animal_object) is Animal:
             print("Error: Cannot add an abstract Animal or non-Animal object.")
             return
@@ -50,7 +47,6 @@ class Zoo:
         print(f"New animal added: {animal_object.name} the {animal_object.species}!")
 
     def list_animals_by_biome(self, target_biome):
-        """Lists animals assigned to a specific biome."""
         print(f"\n--- Animals in the {target_biome} Enclosure ---")
         found = [animal for animal in self.all_animals if animal.biome == target_biome]
 
@@ -62,3 +58,7 @@ class Zoo:
             print(f"* {animal.name} the {animal.species} says: {animal.speak()}")
 
 zoo = Zoo()
+
+#TODO think of Extra functionality to add to project
+
+#TODO Check overall encapsulation

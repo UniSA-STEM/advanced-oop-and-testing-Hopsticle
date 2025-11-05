@@ -19,6 +19,7 @@ def load_names(filename='Names'):
         return []
 names = load_names()
 
+#TODO Start basic addition of staff and their roles
 class Staff:
     def __init__(self, function=None, name=random.choice(names)):
         self.name = name
@@ -38,6 +39,8 @@ class Vetranarian(Staff):
 class Admin(Staff):
     def __init__(self, function=None, name=random.choice(names)):
         super().__init__(function, name)
+
+#TODO implement actions that need to be undertaken by staff based on animal health and enclosure cleanliness
 
 print(names)
 staff = Staff()
