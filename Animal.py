@@ -1,5 +1,5 @@
 '''
-File: Staff.py
+File: Animals.py
 Description: This module contains the different animals as well as their characteristics
 Author: Joshua Cordner
 ID: corjy027
@@ -28,8 +28,8 @@ class Animal(ABC):
         return f'{self.name} is a {self.age} year old {self.species}'
 
 class Reptile(Animal):
-    def __init__(self, name, species=None, age=0, diet='Meat', size=None, is_cold_blooded=True):
-        super().__init__(name, species, age, diet, size, is_cold_blooded)
+    def __init__(self, name, species=None, age=0, diet='Meat', size=None, is_cold_blooded=True, sound=None):
+        super().__init__(name, species, age, diet, size, is_cold_blooded, sound)
 
     def speak(self):
         return 'Hiss'
@@ -50,7 +50,7 @@ class Snake(Reptile):
 
 class Iguana(Reptile):
     def __init__(self, name, size=1):
-        super().__init__(name, 'Iguana', size)
+        super().__init__(name, 'Iguana', size=size)
 
     def speak(self):
         return super().speak()
@@ -63,8 +63,8 @@ class Turtle(Reptile):
         return super().speak()
 
 class Feline(Animal):
-    def __init__(self, name, species=None, diet='Meat', size=2):
-        super().__init__(name, species, diet=diet, size=size)
+    def __init__(self, name, species=None, age=0, diet='Meat', size=2, is_cold_blooded=False, sound=None):
+        super().__init__(name, species, age, diet, size, is_cold_blooded, sound)
 
     def speak(self):
         return 'ROOOARRR'
@@ -91,8 +91,8 @@ class Panther(Feline):
         return super().speak()
 
 class Canine(Animal):
-    def __init__(self, name, species=None, diet='Meat', sound=None, size=None):
-        super().__init__(name, species, diet=diet, sound=sound, size=size)
+    def __init__(self, name, species=None, age=0, diet='Meat', size=None, is_cold_blooded=False, sound=None):
+        super().__init__(name, species, age, diet, size, is_cold_blooded, sound)
 
     def speak(self):
         return self.sound
@@ -120,8 +120,8 @@ class FennecFox(Canine):
 
 
 class Marsupial(Animal):
-    def __init__(self, name, species=None, diet='Plants', size=None):
-        super().__init__(name, species, diet=diet, size=size)
+    def __init__(self, name, species=None, age=0, diet='Plants', size=None, is_cold_blooded=False, sound=None):
+        super().__init__(name, species, age, diet, size, is_cold_blooded, sound)
 
     def speak(self):
         return self.sound
@@ -149,25 +149,30 @@ class TasmanianDevil(Marsupial):
 
 
 class Ailuridae(Animal):
-    def __init__(self, name, species=None, age=0, diet=None, sound='kck'):
-        Animal.__init__(self, name, species, age, diet, sound)
-        '''red panda'''
+    def __init__(self, name, species=None, age=0, diet='Meat/Plants', size=.5, is_cold_blooded=False):
+        super().__init__(name, species, age, diet, size, is_cold_blooded)
+
+    def speak(self):
+        return self.sound
 
 class RedPanda(Ailuridae):
-    def __init__(self, name, species=None, age=0, diet=None, sound='kck'):
-        Ailuridae.__init__(self, name, species, age, diet, sound)
+    def __init__(self, name):
+        super().__init__(name, 'Red Panda')
+
+    def speak(self):
+        return super().speak()
 
 
 class Fish(Animal):
-    def __init__(self, name, diet='Plants', sound ='Glub Glub', size=None, is_cold_blooded=True):
-        super().__init__(name, diet, sound=sound, size=size, is_cold_blooded=is_cold_blooded)
+    def __init__(self, name, species=None, age=0, diet='Plants', size=None, is_cold_blooded=True, sound ='Glub Glub'):
+        super().__init__(name, species, age, diet, size, is_cold_blooded, sound)
 
     def speak(self):
         return self.sound
 
 class Barracuda(Fish):
     def __init__(self, name, diet='Meat', size=1):
-        super().__init__(name, 'Barracuda', diet, size=size)
+        super().__init__(name, 'Barracuda', diet=diet, size=size)
 
     def speak(self):
         return super().speak()
@@ -181,7 +186,7 @@ class ClownFish(Fish):
 
 class Piranha(Fish):
     def __init__(self, name, diet='Meat', size=.2):
-        super().__init__(name, 'Piranha', diet, size=size)
+        super().__init__(name, 'Piranha', diet=diet, size=size)
 
     def speak(self):
         return super().speak()
@@ -194,20 +199,32 @@ class PufferFish(Fish):
         return super().speak()
 
 class Bird(Animal):
-    def __init__(self, name, diet='Plants', sound = 'CAAAW', size=.5):
-        super().__init__(name, diet=diet, sound=sound, size=size)
+    def __init__(self, name, species=None, age=0, diet='Plants', size=.5, is_cold_blooded=False, sound = 'CAAAW'):
+        super().__init__(name, species, age ,diet, size, is_cold_blooded, sound)
+
+    def speak(self):
+        return self.sound
 
 class Penguin(Bird):
     def __init__(self, name, diet='Meat'):
-        super().__init__(name, 'Penguin', diet)
+        super().__init__(name, 'Penguin', diet=diet)
+
+    def speak(self):
+        return super().speak()
 
 class Pheasant(Bird):
     def __init__(self, name):
         super().__init__(name, 'Pheasant')
 
+    def speak(self):
+        return super().speak()
+
 class Peacock(Bird):
-    def __init__(self, name, species):
-        super().__init__(name, species)
+    def __init__(self, name):
+        super().__init__(name, 'Peacock')
+
+    def speak(self):
+        return super().speak()
 
     def AddAnimal(self, name, species=None, age=0, diet=None):
         new_animal =  Animal(name, species, age, diet, species)

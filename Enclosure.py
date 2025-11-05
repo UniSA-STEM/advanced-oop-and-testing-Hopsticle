@@ -25,7 +25,7 @@ class Enclosure:
 class Environment(Enclosure):
     def __init__(self, name, environment =None):
         Enclosure.__init__(self, name, environment =None)
-        '''Plains, Arctic, Jungle, Swamp, Savannah'''
+        '''Plains, Arctic, Jungle, Swamp, Savannah, Water, Forest'''
 
 class SizeEnclosure(Enclosure):
     def __init__(self, name, size=None):
