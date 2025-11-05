@@ -33,10 +33,31 @@ all_staff = []
 # ZooManager(all_staff)
 
 #TODO implement main and zoom manager functions
-class Zoo:
-
+class ZooManager:
     def __init__(self):
         self.all_animals = Animal.all_animals
+
+        self.menu_items = ('---Main Menu---'
+                         '\nAnimals'
+                         '\nStaff'
+                         '\nEnclosures')
+
+        self.animal_menu = ('---Animals---'
+                            '\nList All'
+                            '\nList by Diet'
+                            '\nList by '
+                            '\nAnimal Health Card')
+
+        self.staff_menu = ('---Staff---'
+                           '\nList All'
+                           '\nList by Job'
+                           '\nStaff Actions')
+
+        self.enclosure_menu = ('---Enclosure---'
+                               '\nList All'
+                               '\nList by Biome'
+                               '\nList by Cleanliness')
+
 
     def add_animal(self, animal_object):
         if not isinstance(animal_object, Animal) or type(animal_object) is Animal:
@@ -57,7 +78,13 @@ class Zoo:
         for animal in found:
             print(f"* {animal.name} the {animal.species} says: {animal.speak()}")
 
-zoo = Zoo()
+go = ZooManager()
+test = input("Would you like to add another animal? (Y/N) ")
+if test == "Y":
+
+
+
+
 
 #TODO think of Extra functionality to add to project
 

@@ -33,7 +33,7 @@ class Animal(ABC):
         return f'{self.name} is a {self.age} year old {self.species}'
 
     #TODO Format health Records
-    def HealthRecord(self):
+    def health_record(self):
         return print(
                f'________________________________________'
             f'\n|  Name: {self.name}    Age: {self.age}  |'
@@ -45,11 +45,11 @@ class Animal(ABC):
             f'\n|________________________________________')
 
     #TODO Add animals with random names
-    def AddAnimal(self, name, species=None, age=0, diet=None):
-        new_animal = Animal(name, species, age, diet, species)
+    def add_animal(self, name, species=None, age=0, diet=None, size=None, is_cold_blooded=False, sound=None, biome=None,):
+        new_animal = (name, species, age, diet, size, is_cold_blooded, sound, biome)
         all_animals.append(new_animal)
+        print(f'New animal: {self.name} added ')
         return new_animal
-        print(f'New animal: {new_animal} added ')
     #TODO when adding new animal ensure there is an enclosure ready to move into with enough space
 
 class Reptile(Animal):
