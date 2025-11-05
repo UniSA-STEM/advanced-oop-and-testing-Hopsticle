@@ -38,3 +38,6 @@ class Vetranarian(Staff):
 class Admin(Staff):
     def __init__(self, function=None, name=random.choice(names)):
         super().__init__(function, name)
+
+print(names)
+staff = Staff()

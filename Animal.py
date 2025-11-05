@@ -11,7 +11,7 @@ from abc import ABC, abstractmethod
 all_animals = []
 
 class Animal(ABC):
-    def __init__(self, name, species=None, age=0, diet=None, size=None, is_cold_blooded=False, sound=None):
+    def __init__(self, name, species=None, age=0, diet=None, size=None, is_cold_blooded=False, sound=None, biome=None):
         self.name = name
         self.species = species
         self.age = age
@@ -19,6 +19,7 @@ class Animal(ABC):
         self.size = size
         self.is_cold_blooded = is_cold_blooded
         self.sound = sound
+        self.biome = biome
 
     @abstractmethod
     def speak(self):
@@ -28,56 +29,56 @@ class Animal(ABC):
         return f'{self.name} is a {self.age} year old {self.species}'
 
 class Reptile(Animal):
-    def __init__(self, name, species=None, age=0, diet='Meat', size=None, is_cold_blooded=True, sound=None):
-        super().__init__(name, species, age, diet, size, is_cold_blooded, sound)
+    def __init__(self, name, species=None, age=0, diet='Meat', size=None, is_cold_blooded=True, sound=None, biome=None):
+        super().__init__(name, species, age, diet, size, is_cold_blooded, sound,  biome)
 
     def speak(self):
         return 'Hiss'
 
 class Crocodile(Reptile):
-    def __init__(self, name, size = 3):
-        super().__init__(name, 'Crocodile', size=size)
+    def __init__(self, name, size = 3, biome='Swamp'):
+        super().__init__(name, 'Crocodile', size=size, biome=biome)
 
     def speak(self):
         return 'Beeeeellollolloloow'
 
 class Snake(Reptile):
-    def __init__(self, name, size=1.5):
-        super().__init__(name, 'Snake', size=size)
+    def __init__(self, name, size=1.5, biome='Forest'):
+        super().__init__(name, 'Snake', size=size, biome=biome)
 
     def speak(self):
         return super().speak() + 'sssss'
 
 class Iguana(Reptile):
-    def __init__(self, name, size=1):
-        super().__init__(name, 'Iguana', size=size)
+    def __init__(self, name, size=1, biome='Brush'):
+        super().__init__(name, 'Iguana', size=size, biome=biome)
 
     def speak(self):
         return super().speak()
 
 class Turtle(Reptile):
-    def __init__(self, name, diet='Plants', size=1):
-        super().__init__(name, 'Turtle', diet=diet, size=size)
+    def __init__(self, name, diet='Plants', size=1, biome='Water'):
+        super().__init__(name, 'Turtle', diet=diet, size=size, biome=biome)
 
     def speak(self):
         return super().speak()
 
 class Feline(Animal):
-    def __init__(self, name, species=None, age=0, diet='Meat', size=2, is_cold_blooded=False, sound=None):
-        super().__init__(name, species, age, diet, size, is_cold_blooded, sound)
+    def __init__(self, name, species=None, age=0, diet='Meat', size=2, is_cold_blooded=False, sound=None, biome='Jungle'):
+        super().__init__(name, species, age, diet, size, is_cold_blooded, sound,  biome)
 
     def speak(self):
         return 'ROOOARRR'
 
 class Lion(Feline):
-    def __init__(self, name):
-        super().__init__(name, 'Lion')
+    def __init__(self, name, biome='Savannah'):
+        super().__init__(name, 'Lion', biome=biome)
 
     def speak(self):
         return super().speak()
 
 class Tiger(Feline):
-    def __init__(self, name,):
+    def __init__(self, name):
         super().__init__(name, 'Tiger')
 
     def speak(self):
@@ -91,8 +92,8 @@ class Panther(Feline):
         return super().speak()
 
 class Canine(Animal):
-    def __init__(self, name, species=None, age=0, diet='Meat', size=None, is_cold_blooded=False, sound=None):
-        super().__init__(name, species, age, diet, size, is_cold_blooded, sound)
+    def __init__(self, name, species=None, age=0, diet='Meat', size=None, is_cold_blooded=False, sound=None, biome='Brush'):
+        super().__init__(name, species, age, diet, size, is_cold_blooded, sound,  biome)
 
     def speak(self):
         return self.sound
@@ -105,8 +106,8 @@ class Dingo(Canine):
         return 'Wooof'
 
 class Wolf(Canine):
-    def __init__(self, name, size=1.5):
-        super().__init__(name, 'Wolf', size=size)
+    def __init__(self, name, size=1.5, biome='Forest'):
+        super().__init__(name, 'Wolf', size=size, biome=biome)
 
     def speak(self):
         return 'Hoooowwlllll'
@@ -120,8 +121,8 @@ class FennecFox(Canine):
 
 
 class Marsupial(Animal):
-    def __init__(self, name, species=None, age=0, diet='Plants', size=None, is_cold_blooded=False, sound=None):
-        super().__init__(name, species, age, diet, size, is_cold_blooded, sound)
+    def __init__(self, name, species=None, age=0, diet='Plants', size=None, is_cold_blooded=False, sound=None, biome='Brush'):
+        super().__init__(name, species, age, diet, size, is_cold_blooded, sound,  biome)
 
     def speak(self):
         return self.sound
@@ -149,8 +150,8 @@ class TasmanianDevil(Marsupial):
 
 
 class Ailuridae(Animal):
-    def __init__(self, name, species=None, age=0, diet='Meat/Plants', size=.5, is_cold_blooded=False):
-        super().__init__(name, species, age, diet, size, is_cold_blooded)
+    def __init__(self, name, species=None, age=0, diet='Meat/Plants', size=.5, is_cold_blooded=False, sound=None, biome='Jungle'):
+        super().__init__(name, species, age, diet, size, is_cold_blooded, sound, biome)
 
     def speak(self):
         return self.sound
@@ -164,8 +165,8 @@ class RedPanda(Ailuridae):
 
 
 class Fish(Animal):
-    def __init__(self, name, species=None, age=0, diet='Plants', size=None, is_cold_blooded=True, sound ='Glub Glub'):
-        super().__init__(name, species, age, diet, size, is_cold_blooded, sound)
+    def __init__(self, name, species=None, age=0, diet='Plants', size=None, is_cold_blooded=True, sound ='Glub Glub', biome='Water'):
+        super().__init__(name, species, age, diet, size, is_cold_blooded, sound,  biome)
 
     def speak(self):
         return self.sound
@@ -199,15 +200,15 @@ class PufferFish(Fish):
         return super().speak()
 
 class Bird(Animal):
-    def __init__(self, name, species=None, age=0, diet='Plants', size=.5, is_cold_blooded=False, sound = 'CAAAW'):
-        super().__init__(name, species, age ,diet, size, is_cold_blooded, sound)
+    def __init__(self, name, species=None, age=0, diet='Plants', size=.5, is_cold_blooded=False, sound = 'CAAAW', biome='Brush'):
+        super().__init__(name, species, age ,diet, size, is_cold_blooded, sound,  biome)
 
     def speak(self):
         return self.sound
 
 class Penguin(Bird):
-    def __init__(self, name, diet='Meat'):
-        super().__init__(name, 'Penguin', diet=diet)
+    def __init__(self, name, diet='Meat', biome='Arctic'):
+        super().__init__(name, 'Penguin', diet=diet, biome=biome)
 
     def speak(self):
         return super().speak()

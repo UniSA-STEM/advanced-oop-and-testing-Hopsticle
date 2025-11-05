@@ -8,6 +8,7 @@ This is my own work as defined by the University's Academic Integrity Policy.
 '''
 
 enclosures = []
+environments = ['Plains', 'Arctic', 'Jungle', 'Swamp', 'Savannah', 'Water', 'Forest', 'Brush']
 
 class Enclosure:
     def __init__(self, name, environment =None, cleanliness=100, size=None):
@@ -24,8 +25,7 @@ class Enclosure:
 
 class Environment(Enclosure):
     def __init__(self, name, environment =None):
-        Enclosure.__init__(self, name, environment =None)
-        '''Plains, Arctic, Jungle, Swamp, Savannah, Water, Forest'''
+        super().__init__(name, environment)
 
 class SizeEnclosure(Enclosure):
     def __init__(self, name, size=None):
