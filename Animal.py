@@ -8,6 +8,7 @@ This is my own work as defined by the University's Academic Integrity Policy.
 '''
 
 from abc import ABC, abstractmethod
+import Enclosure
 
 all_animals = []
 
@@ -24,6 +25,7 @@ class Animal(ABC):
         self.sound = sound
         self.biome = biome
         self.health = health
+        self.check_size = Enclosure.Enclosure.check_size
 
     @abstractmethod
     def speak(self):
@@ -51,6 +53,32 @@ class Animal(ABC):
         print(f'New animal: {self.name} added ')
         return new_animal
     #TODO when adding new animal ensure there is an enclosure ready to move into with enough space
+
+    def add_animal(self, animal_object):
+        if not isinstance(animal_object, Animal) or type(animal_object) is Animal:
+            print("Error: Cannot add an abstract Animal or non-Animal object.")
+            return
+
+        self.all_animals.append(animal_object)
+        print(f"New animal added: {animal_object.name} the {animal_object.species}!")
+
+    def add_animal(self, animal_object):
+        '''Attempts to add an animal, running all checks.'''
+        if animal_object.biome != self.biome:
+            print(
+                f'Failed to add {animal_object.name}: Biome mismatch. Needs {animal_object.biome}, found {self.biome}.')
+            return
+
+        if not self.check_size(animal_object):
+            print(
+                f'Failed to add {animal_object.name}: Not enough space (Required {animal_object.get_min_enclosure_area()}m²).')
+            return
+
+        if not self.check_safety(animal_object):
+            return
+
+        self.animals.append(animal_object)
+        print(f'{animal_object.name} the {animal_object.species} added to {self.name}.')
 
 class Reptile(Animal):
     def __init__(self, name, species=None, age=0, diet='Meat', size=None, is_cold_blooded=True, sound=None, biome=None):

@@ -59,13 +59,7 @@ class ZooManager:
                                '\nList by Cleanliness')
 
 
-    def add_animal(self, animal_object):
-        if not isinstance(animal_object, Animal) or type(animal_object) is Animal:
-            print("Error: Cannot add an abstract Animal or non-Animal object.")
-            return
 
-        self.all_animals.append(animal_object)
-        print(f"New animal added: {animal_object.name} the {animal_object.species}!")
 
     def list_animals_by_biome(self, target_biome):
         print(f"\n--- Animals in the {target_biome} Enclosure ---")
@@ -81,9 +75,9 @@ class ZooManager:
 go = ZooManager()
 test = input("Would you like to add another animal? (Y/N) ")
 if test == "Y":
+    ZooManager.add_animal()
 
-
-
+a
 
 
 #TODO think of Extra functionality to add to project

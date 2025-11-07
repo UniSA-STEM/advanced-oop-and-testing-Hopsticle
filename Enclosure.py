@@ -8,21 +8,21 @@ This is my own work as defined by the University's Academic Integrity Policy.
 '''
 
 enclosures = []
-environments = ['Plains', 'Arctic', 'Jungle', 'Swamp', 'Savannah', 'Water', 'Forest', 'Brush']
+biomes = ['Plains', 'Arctic', 'Jungle', 'Swamp', 'Savannah', 'Water', 'Forest', 'Brush']
 
 #TODO implement size requirements for enclosure based on animal size
 class Enclosure:
-    def __init__(self, name, environment: str, area: float, cleanliness=100):
+    def __init__(self, name, biome: str, area: float, cleanliness=100):
         self.name = name
-        self.environment = environment
+        self.biome = biome
         self.area = area
         self.cleanliness = cleanliness
         self.animals = []
 
     def new_enclosure(self):
-        add_enclosure = Enclosure(self.name, self.environment, self.cleanliness, self.size)
+        add_enclosure = Enclosure(self.name, self.biome, self.area, self.cleanliness)
         enclosures.append(add_enclosure)
-        print(f'New enclosure added to {self.name}, it\'s is a {self.environment} type with a size of {self.size}')
+        print(f'New enclosure added to {self.name}, it\'s is a {self.biome} type with a size of {self.area}')
         return add_enclosure
 
     def check_size(self, new_animal):
@@ -54,9 +54,20 @@ class Enclosure:
 
         return True
 
-class Environment(Enclosure):
-    def __init__(self, name, environment =None):
-        super().__init__(name, environment)
+    # def check_size(self, new_animal):
+    #     """Checks if the enclosure has enough space for the new animal."""
+    #     current_required_area = sum(a.get_min_enclosure_area() for a in self.animals)
+    #
+    #     required_for_new_animal = new_animal.get_min_enclosure_area()
+    #
+    #     if self.area >= current_required_area + required_for_new_animal:
+    #         return True
+    #     else:
+    #         return False
+
+class biome(Enclosure):
+    def __init__(self, name, biome =None):
+        super().__init__(name, biome)
 
 class SizeEnclosure(Enclosure):
     def __init__(self, name, size=None):
@@ -64,19 +75,10 @@ class SizeEnclosure(Enclosure):
 
 
 class Cleanliness(Enclosure):
-    def __init__(self, name, cleanliness=100):
-        Enclosure.__init__(self, name, cleanliness)
+        def __init__(self, name, cleanliness=100):
+            Enclosure.__init__(self, name, cleanliness)
 
-    def check_size(self, new_animal):
-        """Checks if the enclosure has enough space for the new animal."""
-        current_required_area = sum(a.get_min_enclosure_area() for a in self.animals)
 
-        required_for_new_animal = new_animal.get_min_enclosure_area()
-
-        if self.area >= current_required_area + required_for_new_animal:
-            return True
-        else:
-            return False
 
 #TODO ensure enclosures do not have carnivores with other types of animals, except maybe fish?
 
@@ -84,9 +86,9 @@ class Cleanliness(Enclosure):
 
     def add_animal(self, animal_object):
         '''Attempts to add an animal, running all checks.'''
-        if animal_object.biome != self.environment:
+        if animal_object.biome != self.biome:
             print(
-                f'Failed to add {animal_object.name}: Biome mismatch. Needs {animal_object.biome}, found {self.environment}.')
+                f'Failed to add {animal_object.name}: Biome mismatch. Needs {animal_object.biome}, found {self.biome}.')
             return
 
         if not self.check_size(animal_object):
@@ -107,4 +109,4 @@ class Cleanliness(Enclosure):
         return f'The {self.name} has {occupants} animals'
 
     def get_enclosure_type(self):
-        return self.environment
+        return self.biome
