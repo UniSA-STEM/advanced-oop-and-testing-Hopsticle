@@ -26,6 +26,7 @@ class Animal(ABC):
         self.biome = biome
         self.health = health
         self.check_size = Enclosure.Enclosure.check_size
+        self.all_animals = all_animals
 
     @abstractmethod
     def speak(self):
@@ -39,17 +40,7 @@ class Animal(ABC):
     def get_description(self):
         return f'{self.name} is a {self.age} year old {self.species}'
 
-    # TODO Format health Records
-    def health_record(self):
-        return print(
-            f'________________________________________'
-            f'\n|  Name: {self.name}    Age: {self.age}  |'
-            f'\n|  Species: {self.species}               |'
-            f'\n|  Diet: {self.diet}                     |'
-            f'\n|  Health Condition: {self.health}       |'
-            f'\n|                                        |'
-            f'\n|                                        |'
-            f'\n|________________________________________')
+
 
     # TODO Add animals with random names
     # TODO when adding new animal ensure there is an enclosure ready to move into with enough space
@@ -84,13 +75,25 @@ class Animal(ABC):
             print(f"* {animal.name} the {animal.species} says: {animal.speak()}")
 
     def menu_list_all_animals(self):
-        pass
+        return self.all_animals
 
     def menu_list_all_by_diet(self):
         pass
 
     def menu_health_card_menu(self):
         pass
+
+    # TODO Format health Records
+    def health_record(self):
+        return print(
+            f'________________________________________'
+            f'\n|  Name: {self.name}    Age: {self.age}  |'
+            f'\n|  Species: {self.species}               |'
+            f'\n|  Diet: {self.diet}                     |'
+            f'\n|  Health Condition: {self.health}       |'
+            f'\n|                                        |'
+            f'\n|                                        |'
+            f'\n|________________________________________')
 
     def menu_remove_animal(self):
         pass

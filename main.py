@@ -20,27 +20,32 @@ all_enclosures = Enclosure.all_enclosures
 
 print("Welcome to Zootopia\'s very own Zoo management tool")
 
-
-
-# def main():
-#     add_staff = Staff.Staff(name=random.choice(Staff.names))
-#     all_staff.append(add_staff)
-#
-#     print(all_staff)
-#
-# class ZooManager():
-#     def __init__(self, all_staff):
-#         self.staff = all_staff
-#
-#     def add_staff(self):
-#         new_staff = Staff.Staff(name=random.choice(Staff.names))
-#         print(new_staff)
-#         all_staff.append(new_staff)
-#
-# ZooManager(all_staff)
-
 def main():
     pass
+    starting_selection = input('Would you like a '
+          '\n1.Default,'
+          '\n2.Randomised '
+          '\n3.Custom zoo?')
+    if starting_selection == '1':
+        pass
+        all_animals = []
+        '''lion, penguin, red panda, barracuda, dingo'''
+        all_staff = []
+        '''Jesse, James, Ash'''
+        all_enclosures = []
+        '''savannah, arctic, jungle, water, brush'''
+        pass
+    elif starting_selection == '2':
+        '''add 5 random animals with matching biome, and 3 staff'''
+        pass
+    else:
+        animal_choice = input('How many animals would you like?')
+        for animal in animal_choice:
+            '''add random animals plus respective biomes/enclosurse'''
+        staff_choice = input('How many staff would you like?')
+        for staff in staff_choice:
+            '''add random staff'''
+        pass
 
     zoo_manager = ZooManager(all_animals, all_staff, all_enclosures)
 
@@ -82,7 +87,7 @@ class ZooManager:
                                '\nRemove Enclosure')
 
     def menu_main(self):
-        pass
+        print(self.menu_items)
 
     def menu_animals(self):
         pass
@@ -102,8 +107,8 @@ class ZooManager:
     def menu_remove_animal(self):
         pass
 
-    def staff_menu(self):
-        pass
+    def menu_staff(self):
+        print(self.staff_menu)
 
     def menu_list_all_staff(self):
         pass
@@ -120,10 +125,8 @@ class ZooManager:
     def menu_remove_staff(self):
         pass
 
-
-
     def enclosure_menu(self):
-        pass
+        print(self.enclosure_menu)
 
     def menu_list_all_enclosures(self):
         pass

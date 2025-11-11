@@ -43,12 +43,18 @@ class Zookeeper(Staff):
     def speak(self):
         return super().speak()
 
+class CleanEnclosure(Zookeeper):
+    pass
+
 class Veterinarian(Staff):
     def __init__(self, name=random.choice(names)):
         super().__init__(name, 'Veterinarian')
 
     def speak(self):
         return 'Who\'s hurt?'
+
+class HealAnimal(Veterinarian):
+    pass
 
 class Admin(Staff):
     def __init__(self, name=random.choice(names)):
@@ -58,12 +64,6 @@ class Admin(Staff):
         return super().speak()
 
 #TODO implement actions that need to be undertaken by staff based on animal health and enclosure cleanliness
-
-class CleanEnclosure(Staff):
-    pass
-
-class HealAnimal(Staff):
-    pass
 
     def menu_list_all_staff(self):
         pass
