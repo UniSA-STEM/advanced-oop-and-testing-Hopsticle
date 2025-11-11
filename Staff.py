@@ -19,6 +19,8 @@ def load_names(filename='Names'):
         return []
 names = load_names()
 
+all_staff = []
+
 #TODO Start basic addition of staff and their roles
 class Staff(ABC):
     def __init__(self, name=random.choice(names), function=None, sound=None):
@@ -28,7 +30,7 @@ class Staff(ABC):
 
     @abstractmethod
     def speak(self):
-        return 'How can I Help?'
+        return 'How can I help?'
 
     def __str__(self):
         return f'{self.name} is a {self.function}'
@@ -46,7 +48,7 @@ class Veterinarian(Staff):
         super().__init__(name, 'Veterinarian')
 
     def speak(self):
-        return super().speak()
+        return 'Who\'s hurt?'
 
 class Admin(Staff):
     def __init__(self, name=random.choice(names)):
@@ -57,5 +59,23 @@ class Admin(Staff):
 
 #TODO implement actions that need to be undertaken by staff based on animal health and enclosure cleanliness
 
-print(names)
-staff = Staff()
+class CleanEnclosure(Staff):
+    pass
+
+class HealAnimal(Staff):
+    pass
+
+    def menu_list_all_staff(self):
+        pass
+
+    def menu_list_by_job(self):
+        pass
+
+    def menu_staff_actions(self):
+        pass
+
+    def menu_add_staff(self):
+        pass
+
+    def menu_remove_staff(self):
+        pass

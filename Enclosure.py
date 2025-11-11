@@ -7,8 +7,9 @@ Username: corjy027
 This is my own work as defined by the University's Academic Integrity Policy.
 '''
 
-enclosures = []
+all_enclosures = []
 biomes = ['Plains', 'Arctic', 'Jungle', 'Swamp', 'Savannah', 'Water', 'Forest', 'Brush']
+import Animal
 
 #TODO implement size requirements for enclosure based on animal size
 class Enclosure:
@@ -17,11 +18,11 @@ class Enclosure:
         self.biome = biome
         self.area = area
         self.cleanliness = cleanliness
-        self.animals = []
+        self.all_animals = Animal.all_animals
 
     def new_enclosure(self):
         add_enclosure = Enclosure(self.name, self.biome, self.area, self.cleanliness)
-        enclosures.append(add_enclosure)
+        all_enclosures.append(add_enclosure)
         print(f'New enclosure added to {self.name}, it\'s is a {self.biome} type with a size of {self.area}')
         return add_enclosure
 
@@ -54,36 +55,6 @@ class Enclosure:
 
         return True
 
-    # def check_size(self, new_animal):
-    #     """Checks if the enclosure has enough space for the new animal."""
-    #     current_required_area = sum(a.get_min_enclosure_area() for a in self.animals)
-    #
-    #     required_for_new_animal = new_animal.get_min_enclosure_area()
-    #
-    #     if self.area >= current_required_area + required_for_new_animal:
-    #         return True
-    #     else:
-    #         return False
-
-class biome(Enclosure):
-    def __init__(self, name, biome =None):
-        super().__init__(name, biome)
-
-class SizeEnclosure(Enclosure):
-    def __init__(self, name, size=None):
-        Enclosure.__init__(self, name, size)
-
-
-class Cleanliness(Enclosure):
-        def __init__(self, name, cleanliness=100):
-            Enclosure.__init__(self, name, cleanliness)
-
-
-
-#TODO ensure enclosures do not have carnivores with other types of animals, except maybe fish?
-
-#TODO List of all animals within one enclosure work on display and naming convention for enclosures
-
     def add_animal(self, animal_object):
         '''Attempts to add an animal, running all checks.'''
         if animal_object.biome != self.biome:
@@ -110,3 +81,65 @@ class Cleanliness(Enclosure):
 
     def get_enclosure_type(self):
         return self.biome
+    # def check_size(self, new_animal):
+    #     """Checks if the enclosure has enough space for the new animal."""
+    #     current_required_area = sum(a.get_min_enclosure_area() for a in self.animals)
+    #
+    #     required_for_new_animal = new_animal.get_min_enclosure_area()
+    #
+    #     if self.area >= current_required_area + required_for_new_animal:
+    #         return True
+    #     else:
+    #         return False
+    def menu_list_all_enclosures(self):
+        pass
+
+
+    def list_animals_by_biome(self, target_biome):
+        print(f"\n--- Animals in the {target_biome} Enclosure ---")
+        found = [animal for animal in self.all_animals if animal.biome == target_biome]
+
+        if not found:
+            print(f"No animals currently assigned to the {target_biome} enclosure.")
+            return
+
+        for animal in found:
+            print(f"* {animal.name} the {animal.species} says: {animal.speak()}")
+
+
+    def menu_list_by_cleanliness(self):
+        pass
+
+
+    def menu_add_enclosure(self):
+        pass
+
+
+    def menu_remove_enclosure(self):
+        pass
+
+
+
+class biome(Enclosure):
+    def __init__(self, name, biome =None):
+        super().__init__(name, biome)
+
+class SizeEnclosure(Enclosure):
+    def __init__(self, name, size=None):
+        Enclosure.__init__(self, name, size)
+
+
+class Cleanliness(Enclosure):
+        def __init__(self, name, cleanliness=100):
+            Enclosure.__init__(self, name, cleanliness)
+
+
+
+
+
+
+
+#TODO ensure enclosures do not have carnivores with other types of animals, except maybe fish?
+
+#TODO List of all animals within one enclosure work on display and naming convention for enclosures
+

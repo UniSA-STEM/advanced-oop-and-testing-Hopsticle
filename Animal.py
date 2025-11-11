@@ -31,13 +31,18 @@ class Animal(ABC):
     def speak(self):
         pass
 
+    @property
+    @abstractmethod
+    def is_predator(self):
+        pass
+
     def get_description(self):
         return f'{self.name} is a {self.age} year old {self.species}'
 
-    #TODO Format health Records
+    # TODO Format health Records
     def health_record(self):
         return print(
-               f'________________________________________'
+            f'________________________________________'
             f'\n|  Name: {self.name}    Age: {self.age}  |'
             f'\n|  Species: {self.species}               |'
             f'\n|  Diet: {self.diet}                     |'
@@ -46,27 +51,14 @@ class Animal(ABC):
             f'\n|                                        |'
             f'\n|________________________________________')
 
-    #TODO Add animals with random names
-    def add_animal(self, name, species=None, age=0, diet=None, size=None, is_cold_blooded=False, sound=None, biome=None,):
-        new_animal = (name, species, age, diet, size, is_cold_blooded, sound, biome)
-        all_animals.append(new_animal)
-        print(f'New animal: {self.name} added ')
-        return new_animal
-    #TODO when adding new animal ensure there is an enclosure ready to move into with enough space
-
-    def add_animal(self, animal_object):
-        if not isinstance(animal_object, Animal) or type(animal_object) is Animal:
-            print("Error: Cannot add an abstract Animal or non-Animal object.")
-            return
-
-        self.all_animals.append(animal_object)
-        print(f"New animal added: {animal_object.name} the {animal_object.species}!")
+    # TODO Add animals with random names
+    # TODO when adding new animal ensure there is an enclosure ready to move into with enough space
 
     def add_animal(self, animal_object):
         '''Attempts to add an animal, running all checks.'''
         if animal_object.biome != self.biome:
             print(
-                f'Failed to add {animal_object.name}: Biome mismatch. Needs {animal_object.biome}, found {self.biome}.')
+                f'Couldn\'t add {animal_object.name}: Wrong Biome. Needs {animal_object.biome}, found {self.biome}.')
             return
 
         if not self.check_size(animal_object):
@@ -77,8 +69,32 @@ class Animal(ABC):
         if not self.check_safety(animal_object):
             return
 
-        self.animals.append(animal_object)
+        all_animals.append(animal_object)
         print(f'{animal_object.name} the {animal_object.species} added to {self.name}.')
+
+    def list_animals_by_biome(self, target_biome):
+        print(f"\n--- Animals in the {target_biome} Enclosure ---")
+        found = [animal for animal in self.all_animals if animal.biome == target_biome]
+
+        if not found:
+            print(f"No animals currently assigned to the {target_biome} enclosure.")
+            return
+
+        for animal in found:
+            print(f"* {animal.name} the {animal.species} says: {animal.speak()}")
+
+    def menu_list_all_animals(self):
+        pass
+
+    def menu_list_all_by_diet(self):
+        pass
+
+    def menu_health_card_menu(self):
+        pass
+
+    def menu_remove_animal(self):
+        pass
+
 
 class Reptile(Animal):
     def __init__(self, name, species=None, age=0, diet='Meat', size=None, is_cold_blooded=True, sound=None, biome=None):
