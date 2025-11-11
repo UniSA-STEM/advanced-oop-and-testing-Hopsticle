@@ -1,5 +1,5 @@
 '''
-File: Staff.py
+File: Main.py
 Description: This module contains the different staff roles and the individuals information
 Author: Joshua Cordner
 ID: corjy027

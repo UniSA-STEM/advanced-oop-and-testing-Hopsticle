@@ -20,17 +20,19 @@ def load_names(filename='Names'):
 names = load_names()
 
 all_staff = []
+staff_responses = ['Yes?', 'What you want?', 'What...?', 'Me busy, leave me alone!', 'Me not that kind of orc!', 'Work, work',
+                   'Okie Dokie', 'Something need doing?']
 
 #TODO Start basic addition of staff and their roles
 class Staff(ABC):
-    def __init__(self, name=random.choice(names), function=None, sound=None):
+    def __init__(self, name=random.choice(names), function=None):
         self.name = name
         self.function = function
-        self.sound = sound
+
 
     @abstractmethod
     def speak(self):
-        return 'How can I help?'
+        pass
 
     def __str__(self):
         return f'{self.name} is a {self.function}'
@@ -41,10 +43,10 @@ class Zookeeper(Staff):
         super().__init__(name, 'Zookeeper')
 
     def speak(self):
-        return super().speak()
+        return random.choice(staff_responses)
 
-class CleanEnclosure(Zookeeper):
-    pass
+    def clean_enclosure(self):
+        pass
 
 class Veterinarian(Staff):
     def __init__(self, name=random.choice(names)):
@@ -53,29 +55,32 @@ class Veterinarian(Staff):
     def speak(self):
         return 'Who\'s hurt?'
 
-class HealAnimal(Veterinarian):
-    pass
+    def heal_animal(self, animal):
+        pass
 
 class Admin(Staff):
     def __init__(self, name=random.choice(names)):
         super().__init__(name, 'Admin')
 
     def speak(self):
-        return super().speak()
+        return random.choice(staff_responses)
 
 #TODO implement actions that need to be undertaken by staff based on animal health and enclosure cleanliness
 
     def menu_list_all_staff(self):
-        pass
+        return all_staff
 
     def menu_list_by_job(self):
         pass
 
     def menu_staff_actions(self):
+        '''clean, feed, heal'''
         pass
 
     def menu_add_staff(self):
+        '''new staff, random choice name, append all staff'''
         pass
 
     def menu_remove_staff(self):
+        '''remove staff from list'''
         pass

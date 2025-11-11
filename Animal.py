@@ -78,7 +78,19 @@ class Animal(ABC):
         return self.all_animals
 
     def menu_list_all_by_diet(self):
-        pass
+        meat_diet = []
+        for animal in self.all_animals:
+            if animal.diet == 'Meat':
+                meat_diet.append(animal.diet)
+        plant_diet = []
+        for animal in self.all_animals:
+            if animal.diet == 'Plant':
+                plant_diet.append(animal.diet)
+        diet_choice = input('Would you like to see:'
+              '\n1. Carnivores'
+              '\n2. Herbivores')
+        if diet_choice == '1': print(f'\n{meat_diet}')
+        else: print(f'\n{plant_diet}')
 
     def menu_health_card_menu(self):
         pass
@@ -96,7 +108,12 @@ class Animal(ABC):
             f'\n|________________________________________')
 
     def menu_remove_animal(self):
-        pass
+        print(self.all_animals)
+        remove_animal = input('Which animal would you like to remove?')
+        if remove_animal not in self.all_animals:
+            print(f'\n{remove_animal} is not a valid animal.')
+        else:
+            self.all_animals.remove(remove_animal)
 
 
 class Reptile(Animal):
@@ -106,6 +123,9 @@ class Reptile(Animal):
     def speak(self):
         return 'Hiss'
 
+    @property
+    def is_predator(self):
+        return True
 
 class Crocodile(Reptile):
     def __init__(self, name, size=3, biome='Swamp'):
@@ -147,6 +167,9 @@ class Feline(Animal):
     def speak(self):
         return 'ROOOARRR'
 
+    @property
+    def is_predator(self):
+        return True
 
 class Lion(Feline):
     def __init__(self, name, biome='Savannah'):
@@ -180,6 +203,9 @@ class Canine(Animal):
     def speak(self):
         return self.sound
 
+    @property
+    def is_predator(self):
+        return True
 
 class Dingo(Canine):
     def __init__(self, name, size=1):
@@ -213,6 +239,9 @@ class Marsupial(Animal):
     def speak(self):
         return self.sound
 
+    @property
+    def is_predator(self):
+        return False
 
 class Kangaroo(Marsupial):
     def __init__(self, name, size=1.5):
@@ -237,6 +266,9 @@ class TasmanianDevil(Marsupial):
     def speak(self):
         return 'SCCREEEEEEEEE'
 
+    @property
+    def is_predator(self):
+        return True
 
 class Ailuridae(Animal):
     def __init__(self, name, species=None, age=0, diet='Meat/Plants', size=.5, is_cold_blooded=False, sound=None,
@@ -246,6 +278,9 @@ class Ailuridae(Animal):
     def speak(self):
         return self.sound
 
+    @property
+    def is_predator(self):
+        return False
 
 class RedPanda(Ailuridae):
     def __init__(self, name):
@@ -263,6 +298,9 @@ class Fish(Animal):
     def speak(self):
         return self.sound
 
+    @property
+    def is_predator(self):
+        return False
 
 class Barracuda(Fish):
     def __init__(self, name, diet='Meat', size=1):
@@ -271,6 +309,9 @@ class Barracuda(Fish):
     def speak(self):
         return super().speak()
 
+    @property
+    def is_predator(self):
+        return True
 
 class ClownFish(Fish):
     def __init__(self, name, size=.2):
@@ -287,6 +328,9 @@ class Piranha(Fish):
     def speak(self):
         return super().speak()
 
+    @property
+    def is_predator(self):
+        return True
 
 class PufferFish(Fish):
     def __init__(self, name, size=.2):
@@ -304,6 +348,9 @@ class Bird(Animal):
     def speak(self):
         return self.sound
 
+    @property
+    def is_predator(self):
+        return False
 
 class Penguin(Bird):
     def __init__(self, name, diet='Meat', biome='Arctic'):
@@ -312,6 +359,9 @@ class Penguin(Bird):
     def speak(self):
         return super().speak()
 
+    @property
+    def is_predator(self):
+        return True
 
 class Pheasant(Bird):
     def __init__(self, name):

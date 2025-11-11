@@ -92,10 +92,12 @@ class Enclosure:
     #     else:
     #         return False
     def menu_list_all_enclosures(self):
-        pass
+        print(*all_enclosures)
 
 
     def list_animals_by_biome(self, target_biome):
+        target_biome = input('For which biome would you like the check on the animals of?')
+
         print(f"\n--- Animals in the {target_biome} Enclosure ---")
         found = [animal for animal in self.all_animals if animal.biome == target_biome]
 
