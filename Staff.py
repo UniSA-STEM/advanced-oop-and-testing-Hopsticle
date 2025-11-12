@@ -66,21 +66,3 @@ class Admin(Staff):
         return random.choice(staff_responses)
 
 #TODO implement actions that need to be undertaken by staff based on animal health and enclosure cleanliness
-
-    def menu_list_all_staff(self):
-        return all_staff
-
-    def menu_list_by_job(self):
-        pass
-
-    def menu_staff_actions(self):
-        '''clean, feed, heal'''
-        pass
-
-    def menu_add_staff(self):
-        '''new staff, random choice name, append all staff'''
-        pass
-
-    def menu_remove_staff(self):
-        '''remove staff from list'''
-        pass

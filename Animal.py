@@ -1,5 +1,5 @@
 '''
-File: Animals.py
+File: Animal.py
 Description: This module contains the different animals as well as their characteristics
 Author: Joshua Cordner
 ID: corjy027
@@ -98,14 +98,14 @@ class Animal(ABC):
     # TODO Format health Records
     def health_record(self):
         return print(
-            f'________________________________________'
+               f'________________________________________'
             f'\n|  Name: {self.name}    Age: {self.age}  |'
             f'\n|  Species: {self.species}               |'
             f'\n|  Diet: {self.diet}                     |'
             f'\n|  Health Condition: {self.health}       |'
             f'\n|                                        |'
             f'\n|                                        |'
-            f'\n|________________________________________')
+            f'\n|________________________________________|')
 
     def menu_remove_animal(self):
         print(self.all_animals)

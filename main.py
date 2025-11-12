@@ -11,23 +11,21 @@ import random
 import Staff
 import Enclosure
 import Animal
-from abc import ABC, abstractmethod
 
 all_animals = Animal.all_animals
 all_staff = Staff.all_staff
 all_enclosures = Enclosure.all_enclosures
 
-
 print("Welcome to Zootopia\'s very own Zoo management tool")
 
 def main():
     pass
-    starting_selection = input('Would you like a '
+    starting_selection = input('What Zoo would you like to create? '
           '\n1.Default,'
           '\n2.Randomised '
-          '\n3.Custom zoo?')
+          '\n3.Custom\n')
+    #TODO setter in main then getter in Zoo manager
     if starting_selection == '1':
-        pass
         all_animals = []
         '''lion, penguin, red panda, barracuda, dingo'''
         all_staff = []
@@ -59,35 +57,87 @@ class ZooManager:
         self.all_enclosures = Enclosure.all_enclosures
 
         self.menu_items = ('---Main Menu---'
-                           '\nAnimals'
-                         '\nStaff'
-                         '\nEnclosures')
+                           '\n1. Animals'
+                           '\n2. Staff'
+                           '\n3. Enclosures')
 
         self.animal_menu = ('---Animals---'
-                            '\nList All'
-                            '\nList by Diet'
-                            '\nList by '
-                            '\nAnimal Health Card'
-                            '\nAdd Animal'
-                            '\nRemove Animal')
+                            '\n1. List All'
+                            '\n2. List by Diet'
+                            '\n3. List by '
+                            '\n4. Animal Health Card'
+                            '\n5. Add Animal'
+                            '\n6. Remove Animal')
 
         self.staff_menu = ('---Staff---'
-                           '\nList All'
-                           '\nList by Job'
-                           '\nStaff Actions'
-                           '\nAdd Staff'
-                           '\nRemove Staff')
+                           '\n1. List All'
+                           '\n2. List by Job'
+                           '\n3. Staff Actions'
+                           '\n4. Add Staff'
+                           '\n5. Remove Staff')
 
         #TODO sort menu items by criteria
         self.enclosure_menu = ('---Enclosure---'
-                               '\nList All'
-                               '\nList by Biome'
-                               '\nList by Cleanliness'
-                               '\nAdd Enclosure'
-                               '\nRemove Enclosure')
+                               '\n1. List All'
+                               '\n2. List by Biome'
+                               '\n3. List by Cleanliness'
+                               '\n4. Add Enclosure'
+                               '\n5. Remove Enclosure')
 
     def menu_main(self):
         print(self.menu_items)
+
+    def menu_list_all_staff(self):
+        for staff in self.all_staff:
+            print(f'{staff.name} is a {staff.function}')
+
+    def menu_list_by_job(self):
+        # for staff in
+        pass
+
+    def menu_staff_actions(self):
+        '''clean, feed, heal'''
+        pass
+
+    def menu_add_staff(self):
+        '''new staff, random choice name, append all staff'''
+        pass
+
+    def menu_remove_staff(self):
+        '''remove staff from list'''
+        pass
+
+    def menu_list_all_enclosures(self):
+        if not self.all_enclosures:
+            print("No enclosures have been built yet.")
+            return
+
+        print("\n--- All Enclosures ---")
+        for i, enclosure in enumerate(self.all_enclosures):
+            occupants = enclosure.get_occupants()
+            print(f"{i + 1}. {enclosure.name} ({enclosure.biome}, {enclosure.area}m²) - Occupants: {occupants}")
+
+    def menu_list_by_cleanliness(self):
+        pass
+
+    def menu_add_enclosure(self):
+            name = input("Enter Enclosure Name: ")
+            print(f"Available Biomes: {Enclosure.biomes}")
+            biome = input("Enter Biome: ")
+
+            try:
+                area = float(input("Enter Area (m²): "))
+            except ValueError:
+                print("Invalid area input. Aborting.")
+                return
+
+            new_enclosure = Enclosure.Enclosure(name, biome, area)
+            new_enclosure.new_enclosure()
+
+            print(f"Successfully added {name}!")
+
+    def menu_remove_enclosure(self):
+        pass
 
     def menu_animals(self):
         pass
@@ -110,50 +160,21 @@ class ZooManager:
     def menu_staff(self):
         print(self.staff_menu)
 
-    def menu_list_all_staff(self):
-        pass
-
-    def menu_list_by_job(self):
-        pass
-
-    def menu_staff_actions(self):
-        pass
-
-    def menu_add_staff(self):
-        pass
-
-    def menu_remove_staff(self):
-        pass
-
     def enclosure_menu(self):
         print(self.enclosure_menu)
 
-    def menu_list_all_enclosures(self):
-        pass
+    def list_animals_by_biome(self, target_biome):
+        target_biome = input('For which biome would you like the check on the animals of?')
 
-    def menu_list_by_biome(self):
-        pass
+        print(f"\n--- Animals in the {target_biome} Enclosure ---")
+        found = [animal for animal in self.all_animals if animal.biome == target_biome]
 
-    def menu_list_by_cleanliness(self):
-        pass
+        if not found:
+            print(f"No animals currently assigned to the {target_biome} enclosure.")
+            return
 
-    def menu_add_enclosure(self):
-        pass
-
-    def menu_remove_enclosure(self):
-        pass
-
-
-
-
-
-
-
-
-go = ZooManager()
-test = input("Would you like to add another animal? (Y/N) ")
-if test == "Y":
-    Animal.Animal.add_animal(Animal.Lion)
+        for animal in found:
+            print(f"* {animal.name} the {animal.species} says: {animal.speak()}")
 
 
 

@@ -18,20 +18,20 @@ class Enclosure:
         self.biome = biome
         self.area = area
         self.cleanliness = cleanliness
-        self.all_animals = Animal.all_animals
+        self.animals = []
+
+    #TODO return __str__ statement of current enclosure
+    #TODO ensure when creating multiple enclosures of the same biome there are no errors in overwriting existing
 
     def new_enclosure(self):
-        add_enclosure = Enclosure(self.name, self.biome, self.area, self.cleanliness)
-        all_enclosures.append(add_enclosure)
-        print(f'New enclosure added to {self.name}, it\'s is a {self.biome} type with a size of {self.area}')
-        return add_enclosure
+        all_enclosures.append(self)
+        print(f'New enclosure added: {self.name}, it\'s a {self.biome} type with a size of {self.area}m²')
+        return self
 
     def check_size(self, new_animal):
-        """
-        Enforces two size requirements:
+        '''Enforces two size requirements:
         1. Area must be 20x the largest animal's size.
-        2. Area must be 5x the total combined size of all occupants.
-        """
+        2. Area must be 5x the total combined size of all occupants.'''
 
         all_occupants = self.animals + [new_animal]
 
@@ -55,6 +55,23 @@ class Enclosure:
 
         return True
 
+    def check_safety(self, new_animal):
+        '''Enforces safety rules: Predators cannot be mixed with non-predators, except fish.'''
+        all_occupants = self.animals + [new_animal]
+        has_predator = any(a.is_predator for a in all_occupants)
+        has_non_predator = any(not a.is_predator for a in all_occupants)
+
+        if has_predator and has_non_predator:
+            are_all_fish = all(isinstance(a, Animal.Fish) for a in all_occupants)
+            if not are_all_fish:
+                pred_example = next((a.species for a in all_occupants if a.is_predator), 'Predator')
+                non_pred_example = next((a.species for a in all_occupants if not a.is_predator), 'Non-Predator')
+                print(
+                    f"Cannot mix predator ({pred_example}) with non-predator ({non_pred_example}).")
+                return False
+            return True
+        return True
+
     def add_animal(self, animal_object):
         '''Attempts to add an animal, running all checks.'''
         if animal_object.biome != self.biome:
@@ -64,7 +81,7 @@ class Enclosure:
 
         if not self.check_size(animal_object):
             print(
-                f'Failed to add {animal_object.name}: Not enough space (Required {animal_object.get_min_enclosure_area()}m²).')
+                f'Failed to add {animal_object.name}: Not enough space.')
             return
 
         if not self.check_safety(animal_object):
@@ -81,67 +98,3 @@ class Enclosure:
 
     def get_enclosure_type(self):
         return self.biome
-    # def check_size(self, new_animal):
-    #     """Checks if the enclosure has enough space for the new animal."""
-    #     current_required_area = sum(a.get_min_enclosure_area() for a in self.animals)
-    #
-    #     required_for_new_animal = new_animal.get_min_enclosure_area()
-    #
-    #     if self.area >= current_required_area + required_for_new_animal:
-    #         return True
-    #     else:
-    #         return False
-    def menu_list_all_enclosures(self):
-        print(*all_enclosures)
-
-
-    def list_animals_by_biome(self, target_biome):
-        target_biome = input('For which biome would you like the check on the animals of?')
-
-        print(f"\n--- Animals in the {target_biome} Enclosure ---")
-        found = [animal for animal in self.all_animals if animal.biome == target_biome]
-
-        if not found:
-            print(f"No animals currently assigned to the {target_biome} enclosure.")
-            return
-
-        for animal in found:
-            print(f"* {animal.name} the {animal.species} says: {animal.speak()}")
-
-
-    def menu_list_by_cleanliness(self):
-        pass
-
-
-    def menu_add_enclosure(self):
-        pass
-
-
-    def menu_remove_enclosure(self):
-        pass
-
-
-
-class biome(Enclosure):
-    def __init__(self, name, biome =None):
-        super().__init__(name, biome)
-
-class SizeEnclosure(Enclosure):
-    def __init__(self, name, size=None):
-        Enclosure.__init__(self, name, size)
-
-
-class Cleanliness(Enclosure):
-        def __init__(self, name, cleanliness=100):
-            Enclosure.__init__(self, name, cleanliness)
-
-
-
-
-
-
-
-#TODO ensure enclosures do not have carnivores with other types of animals, except maybe fish?
-
-#TODO List of all animals within one enclosure work on display and naming convention for enclosures
-
