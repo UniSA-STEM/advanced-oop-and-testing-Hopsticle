@@ -112,6 +112,7 @@ class ZooManager:
 
     def menu_add_staff(self):
         '''new staff, random choice name, append all staff'''
+        #TODO add staff takes three days. add volunteers immediately?
         pass
 
     def menu_remove_staff(self):
@@ -235,6 +236,8 @@ class ZooManager:
     def day_increment(self):
         self.day_index += 1
         self.sick_animal()
+        for self.all_enclosures:
+            Enclosure.Enclosure.cleanliness() -= 5
 
     #TODO implement way of incrementing days with actions required.
     #TODO with each new day list changes if any2, from overnight

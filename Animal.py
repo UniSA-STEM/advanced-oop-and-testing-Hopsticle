@@ -21,6 +21,9 @@ def load_names(filename='Names'):
         return []
 names = load_names()
 
+animal_ID_index = 0
+animal_ID = f'{animal_ID_index:03d}'
+
 class Animal(ABC):
     def __init__(self, name=random.choice(names), species=None, age=0, diet=None, size=None, is_cold_blooded=False,
                  sound=None, biome=None, health=None):
@@ -35,6 +38,7 @@ class Animal(ABC):
         self.health = health
         self.check_size = Enclosure.Enclosure.check_size
         self.all_animals = all_animals
+        self.ID = animal_ID
 
     @abstractmethod
     def speak(self):
@@ -46,7 +50,7 @@ class Animal(ABC):
         pass
 
     def get_description(self):
-        return f'{self.name} is a {self.age} year old {self.species}'
+        return f'{self.ID}: {self.name} is a {self.age} year old {self.species}'
 
     # TODO Add animals with random names - Fine do to unique objects
 
@@ -69,6 +73,8 @@ class Animal(ABC):
 
         all_animals.append(animal_object)
         print(f'{animal_object.name} the {animal_object.species} added to {self.name}.')
+        #TODO assign ID to new animal and increment ID index
+        animal_ID_index += 1
 
     def list_animals_by_biome(self, target_biome):
         print(f'\n--- Animals in the {target_biome} Enclosure ---')
@@ -88,19 +94,31 @@ class Animal(ABC):
         meat_diet = []
         for animal in self.all_animals:
             if animal.diet == 'Meat':
-                meat_diet.append(animal.diet)
+                meat_diet.append(animal.name)
         plant_diet = []
         for animal in self.all_animals:
             if animal.diet == 'Plant':
-                plant_diet.append(animal.diet)
+                plant_diet.append(animal.name)
         diet_choice = input('Would you like to see:'
               '\n1. Carnivores'
               '\n2. Herbivores')
-        if diet_choice == '1': print(f'\n{meat_diet}')
-        else: print(f'\n{plant_diet}')
+        if diet_choice == '1':
+            for animal in meat_diet:
+                print(f'*\n{animal.name}')
+        elif diet_choice == '2':
+            for animal in plant_diet:
+                print(f'*\n{animal.name}')
+        else:
+            print('Invalid choice.')
 
     def menu_health_card_menu(self):
-        pass
+        self.menu_list_all_animals()
+        animal_health_card = input('Which animal would you like to see?')
+        if animal_health_card not in self.all_animals:
+            print(f'Invalid choice.')
+            return
+        else:
+            self.health_record()
 
     # TODO Format health Records
     def health_record(self):

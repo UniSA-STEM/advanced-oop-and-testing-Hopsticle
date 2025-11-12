@@ -20,9 +20,13 @@ class Enclosure:
         self.cleanliness = cleanliness
         self.animals = []
 
-    #TODO return __str__ statement of current enclosure
+    def __str__(self):
+        return (f'Enclosure: {self.name}'
+                f'Biome: {self.biome}'
+                f'Animals: {self.animals}')
 
-    #TODO ensure when creating multiple enclosures of the same biome there are no errors in overwriting existing
+
+    #TODO ensure when creating multiple enclosures of the same biome there are no errors in overwriting existing - shouldn't unique objects
 
     def new_enclosure(self):
         all_enclosures.append(self)
