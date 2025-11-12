@@ -9,13 +9,21 @@ This is my own work as defined by the University's Academic Integrity Policy.
 
 from abc import ABC, abstractmethod
 import Enclosure
-
+import random
 all_animals = []
 
+def load_names(filename='Names'):
+    try:
+        with open(filename, 'r') as file:
+            return file.read().splitlines()
+    except FileNotFoundError:
+        print('Names file not found.')
+        return []
+names = load_names()
 
 class Animal(ABC):
-    def __init__(self, name, species=None, age=0, diet=None, size=None, is_cold_blooded=False, sound=None, biome=None,
-                 health=None):
+    def __init__(self, name=random.choice(names), species=None, age=0, diet=None, size=None, is_cold_blooded=False,
+                 sound=None, biome=None, health=None):
         self.name = name
         self.species = species
         self.age = age
@@ -64,15 +72,15 @@ class Animal(ABC):
         print(f'{animal_object.name} the {animal_object.species} added to {self.name}.')
 
     def list_animals_by_biome(self, target_biome):
-        print(f"\n--- Animals in the {target_biome} Enclosure ---")
+        print(f'\n--- Animals in the {target_biome} Enclosure ---')
         found = [animal for animal in self.all_animals if animal.biome == target_biome]
 
         if not found:
-            print(f"No animals currently assigned to the {target_biome} enclosure.")
+            print(f'No animals currently assigned to the {target_biome} enclosure.')
             return
 
         for animal in found:
-            print(f"* {animal.name} the {animal.species} says: {animal.speak()}")
+            print(f'* {animal.name} the {animal.species} says: {animal.speak()}')
 
     def menu_list_all_animals(self):
         return self.all_animals
@@ -341,7 +349,7 @@ class PufferFish(Fish):
 
 
 class Bird(Animal):
-    def __init__(self, name, species=None, age=0, diet='Plants', size=.5, is_cold_blooded=False, sound='CAAAW',
+    def __init__(self, name, species=None, age=0, diet='Plants', size=.5, is_cold_blooded=False, sound='KACAAAW',
                  biome='Brush'):
         super().__init__(name, species, age, diet, size, is_cold_blooded, sound, biome)
 

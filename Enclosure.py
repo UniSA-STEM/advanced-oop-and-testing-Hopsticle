@@ -34,14 +34,13 @@ class Enclosure:
         2. Area must be 5x the total combined size of all occupants.'''
 
         all_occupants = self.animals + [new_animal]
-
         largest_animal_size = max(a.size for a in all_occupants)
         min_area_individual = largest_animal_size * 20
 
         if self.area < min_area_individual:
             print(
-                f"Size Fail (Rule 1): Area ({self.area}m²) is too small for the largest animal (Size: {largest_animal_size}m)."
-                f" Needs at least {min_area_individual}m².")
+                f'Size Fail (Rule 1): Area ({self.area}m²) is too small for the largest animal (Size: {largest_animal_size}m).'
+                f' Needs at least {min_area_individual}m².')
             return False
 
         total_combined_size = sum(a.size for a in all_occupants)
@@ -49,8 +48,8 @@ class Enclosure:
 
         if self.area < min_area_occupancy:
             print(
-                f"Size Fail (Rule 2): Area ({self.area}m²) is too small. Combined size: {total_combined_size}m."
-                f" Needs at least {min_area_occupancy}m².")
+                f'Size Fail (Rule 2): Area ({self.area}m²) is too small. Combined size: {total_combined_size}m.'
+                f' Needs at least {min_area_occupancy}m².')
             return False
 
         return True
@@ -67,7 +66,7 @@ class Enclosure:
                 pred_example = next((a.species for a in all_occupants if a.is_predator), 'Predator')
                 non_pred_example = next((a.species for a in all_occupants if not a.is_predator), 'Non-Predator')
                 print(
-                    f"Cannot mix predator ({pred_example}) with non-predator ({non_pred_example}).")
+                    f'Cannot mix predator ({pred_example}) with non-predator ({non_pred_example}).')
                 return False
             return True
         return True

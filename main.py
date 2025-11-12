@@ -16,37 +16,33 @@ all_animals = Animal.all_animals
 all_staff = Staff.all_staff
 all_enclosures = Enclosure.all_enclosures
 
-print("Welcome to Zootopia\'s very own Zoo management tool")
+print('Welcome to Zootopia\'s very own Zoo management tool')
 
 def main():
     pass
     starting_selection = input('What Zoo would you like to create? '
-          '\n1.Default,'
+          '\n1.Default'
           '\n2.Randomised '
           '\n3.Custom\n')
     #TODO setter in main then getter in Zoo manager
     if starting_selection == '1':
-        all_animals = []
-        '''lion, penguin, red panda, barracuda, dingo'''
-        all_staff = []
-        '''Jesse, James, Ash'''
-        all_enclosures = []
-        '''savannah, arctic, jungle, water, brush'''
-        pass
+        ZooManager.get_default()
+
     elif starting_selection == '2':
-        '''add 5 random animals with matching biome, and 3 staff'''
+        '''add 5 random enclosures with compatible animal, and one of each staff'''
         pass
     else:
-        animal_choice = input('How many animals would you like?')
+        animal_choice = input('How many animals would you like? ')
         for animal in animal_choice:
-            '''add random animals plus respective biomes/enclosurse'''
-        staff_choice = input('How many staff would you like?')
+            '''add random animals plus respective biomes/enclosures'''
+            pass
+        staff_choice = input('How many staff would you like? ')
         for staff in staff_choice:
             '''add random staff'''
-        pass
+            pass
 
     zoo_manager = ZooManager(all_animals, all_staff, all_enclosures)
-
+    zoo_manager.start_day()
 
 
 #TODO implement main and zoom manager functions
@@ -54,7 +50,7 @@ class ZooManager:
     def __init__(self):
         self.all_animals = Animal.all_animals
         self.all_staff = Staff.all_staff
-        self.all_enclosures = Enclosure.all_enclosures
+        self.all_enclosures = all_enclosures
 
         self.menu_items = ('---Main Menu---'
                            '\n1. Animals'
@@ -84,8 +80,23 @@ class ZooManager:
                                '\n4. Add Enclosure'
                                '\n5. Remove Enclosure')
 
+    def set_default(self):
+        all_animals = []
+        '''lion, penguin, red panda, barracuda, dingo'''
+        all_staff = []
+        '''Jesse, James, Ash'''
+        all_enclosures = []
+        '''savannah, arctic, jungle, water, brush'''
+
+    def get_default(self):
+        self.set_default()
+        pass
+
     def menu_main(self):
         print(self.menu_items)
+
+    def menu_staff(self):
+        print(self.staff_menu)
 
     def menu_list_all_staff(self):
         for staff in self.all_staff:
@@ -109,32 +120,34 @@ class ZooManager:
 
     def menu_list_all_enclosures(self):
         if not self.all_enclosures:
-            print("No enclosures have been built yet.")
+            print('No enclosures have been built yet.')
             return
 
-        print("\n--- All Enclosures ---")
+        print('\n--- All Enclosures ---')
         for i, enclosure in enumerate(self.all_enclosures):
             occupants = enclosure.get_occupants()
-            print(f"{i + 1}. {enclosure.name} ({enclosure.biome}, {enclosure.area}m²) - Occupants: {occupants}")
+            print(f'{i + 1}. {enclosure.name} ({enclosure.biome}, {enclosure.area}m²) - Occupants: {occupants}')
 
     def menu_list_by_cleanliness(self):
-        pass
+        sorted_by_cleanliness =sorted(self.all_enclosures, key=lambda enclosure: enclosure.cleanliness)
+        print(sorted_by_cleanliness)
+
 
     def menu_add_enclosure(self):
-            name = input("Enter Enclosure Name: ")
-            print(f"Available Biomes: {Enclosure.biomes}")
-            biome = input("Enter Biome: ")
+            name = input('Enter Enclosure Name: ')
+            print(f'Available Biomes: {Enclosure.biomes}')
+            biome = input('Enter Biome: ')
 
             try:
-                area = float(input("Enter Area (m²): "))
+                area = float(input('Enter Area (m²): '))
             except ValueError:
-                print("Invalid area input. Aborting.")
+                print('Invalid area input. Aborting.')
                 return
 
             new_enclosure = Enclosure.Enclosure(name, biome, area)
             new_enclosure.new_enclosure()
 
-            print(f"Successfully added {name}!")
+            print(f'Successfully added {name}!')
 
     def menu_remove_enclosure(self):
         pass
@@ -143,7 +156,9 @@ class ZooManager:
         pass
 
     def menu_list_all_animals(self):
-        pass
+        for animal in self.all_animals:
+            print(f'Animals in no order:'
+                  f'\n*{animal.name}')
 
     def menu_list_all_by_diet(self):
         pass
@@ -157,8 +172,7 @@ class ZooManager:
     def menu_remove_animal(self):
         pass
 
-    def menu_staff(self):
-        print(self.staff_menu)
+
 
     def enclosure_menu(self):
         print(self.enclosure_menu)
@@ -166,18 +180,26 @@ class ZooManager:
     def list_animals_by_biome(self, target_biome):
         target_biome = input('For which biome would you like the check on the animals of?')
 
-        print(f"\n--- Animals in the {target_biome} Enclosure ---")
+        print(f'\n--- Animals in the {target_biome} Enclosure ---')
         found = [animal for animal in self.all_animals if animal.biome == target_biome]
 
         if not found:
-            print(f"No animals currently assigned to the {target_biome} enclosure.")
+            print(f'No animals currently assigned to the {target_biome} enclosure.')
             return
 
         for animal in found:
-            print(f"* {animal.name} the {animal.species} says: {animal.speak()}")
+            print(f'* {animal.name}')
 
+    def sick_animal(self):
+        sick_calculator = random.randint(0, 100)
+        if sick_calculator > 95:
+            random_animal = random.choice(list(self.all_animals))
+            random_animal.health = 0
+            print(f'{random_animal.name} is sick and needs to see a Vet')
 
-
+    def start_day(self):
+        pass
+    
 #TODO think of Extra functionality to add to project
 
 #TODO Check overall encapsulation

@@ -20,8 +20,8 @@ def load_names(filename='Names'):
 names = load_names()
 
 all_staff = []
-staff_responses = ['Yes?', 'What you want?', 'What...?', 'Me busy, leave me alone!', 'Me not that kind of orc!', 'Work, work',
-                   'Okie Dokie', 'Something need doing?']
+staff_responses = ['Yes?', 'What you want?', 'What...?', 'Me busy, leave me alone!', 'Me not that kind of orc!',
+                   'Work, work', 'Okie Dokie', 'Something need doing?']
 
 #TODO Start basic addition of staff and their roles
 class Staff(ABC):
