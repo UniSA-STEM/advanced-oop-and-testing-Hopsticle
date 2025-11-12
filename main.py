@@ -47,6 +47,7 @@ def main():
 
 #TODO implement main and zoom manager functions
 class ZooManager:
+    day_index = 0
     def __init__(self):
         self.all_animals = Animal.all_animals
         self.all_staff = Staff.all_staff
@@ -149,10 +150,13 @@ class ZooManager:
             print(f'Successfully added {name}!')
 
     def menu_remove_enclosure(self):
-        pass
+        print(f'{all_enclosures}')
+        enclosure_to_remove = input('Which Enclosure do you want to close?').capitalize()
+        self.all_enclosures.remove(enclosure_to_remove)
+        print(f'Successfully removed {enclosure_to_remove}')
 
     def menu_animals(self):
-        pass
+        return self.animal_menu
 
     def menu_list_all_animals(self):
         for animal in self.all_animals:
@@ -160,16 +164,46 @@ class ZooManager:
                   f'\n*{animal.name}')
 
     def menu_list_all_by_diet(self):
-        pass
+        meat_diet = []
+        for animal in self.all_animals:
+            if animal.diet == 'Meat':
+                meat_diet.append(animal.diet)
+        plant_diet = []
+        for animal in self.all_animals:
+            if animal.diet == 'Plant':
+                plant_diet.append(animal.diet)
+        diet_choice = input('Would you like to see:'
+                            '\n1. Carnivores'
+                            '\n2. Herbivores')
+        if diet_choice == '1':
+            print(f'\n{meat_diet}')
+        else:
+            print(f'\n{plant_diet}')
 
     def menu_health_card_menu(self):
         pass
 
-    def menu_add_animal(self):
-        pass
+    def menu_add_animal(self, animal_object):
+        '''Attempts to add an animal, running all checks.'''
+        if animal_object.biome != self.biome:
+            print(
+                f'Couldn\'t add {animal_object.name}: Wrong Biome. Needs {animal_object.biome}, found {self.biome}.')
+            return
+        # TODO when adding new animal ensure there is an enclosure ready to move into with enough space
+        if not self.check_size(animal_object):
+            print(
+                f'Failed to add {animal_object.name}: Not enough space (Required {animal_object.get_min_enclosure_area()}m²).')
+            return
+        # TODO Takes a day for animal to arrive,
+        if not self.check_safety(animal_object):
+            return
 
     def menu_remove_animal(self):
-        pass
+        for animal in self.all_animals:
+            print(f'*{animal.name} the {animal.species}')
+        animal_to_remove = input('Enter Animal Name: ').capitalize()
+        self.all_animals.remove(animal_to_remove)
+        print(f'{animal_to_remove} was sent back to the wild!')
 
 
 
@@ -195,11 +229,15 @@ class ZooManager:
             random_animal = random.choice(list(self.all_animals))
             random_animal.health = 0
             print(f'{random_animal.name} is sick and needs to see a Vet')
+        else:
+            print('No animals became unhealthy overnight.. Phew!!')
 
-    def start_day(self):
-        pass
+    def day_increment(self):
+        self.day_index += 1
+        self.sick_animal()
+
     #TODO implement way of incrementing days with actions required.
-
+    #TODO with each new day list changes if any2, from overnight
     #TODO think of Extra functionality to add to project
 
     #TODO Check overall encapsulation

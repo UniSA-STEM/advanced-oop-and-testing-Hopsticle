@@ -63,7 +63,7 @@ class Animal(ABC):
             print(
                 f'Failed to add {animal_object.name}: Not enough space (Required {animal_object.get_min_enclosure_area()}m²).')
             return
-
+        #TODO Takes a day for animal to arrive,
         if not self.check_safety(animal_object):
             return
 
