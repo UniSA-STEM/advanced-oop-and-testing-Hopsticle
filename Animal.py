@@ -48,10 +48,9 @@ class Animal(ABC):
     def get_description(self):
         return f'{self.name} is a {self.age} year old {self.species}'
 
+    # TODO Add animals with random names - Fine do to unique objects
 
 
-    # TODO Add animals with random names
-    # TODO when adding new animal ensure there is an enclosure ready to move into with enough space
 
     def add_animal(self, animal_object):
         '''Attempts to add an animal, running all checks.'''
@@ -59,7 +58,7 @@ class Animal(ABC):
             print(
                 f'Couldn\'t add {animal_object.name}: Wrong Biome. Needs {animal_object.biome}, found {self.biome}.')
             return
-
+        # TODO when adding new animal ensure there is an enclosure ready to move into with enough space
         if not self.check_size(animal_object):
             print(
                 f'Failed to add {animal_object.name}: Not enough space (Required {animal_object.get_min_enclosure_area()}m²).')

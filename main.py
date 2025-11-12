@@ -72,7 +72,6 @@ class ZooManager:
                            '\n4. Add Staff'
                            '\n5. Remove Staff')
 
-        #TODO sort menu items by criteria
         self.enclosure_menu = ('---Enclosure---'
                                '\n1. List All'
                                '\n2. List by Biome'
@@ -199,10 +198,11 @@ class ZooManager:
 
     def start_day(self):
         pass
-    
-#TODO think of Extra functionality to add to project
+    #TODO implement way of incrementing days with actions required.
 
-#TODO Check overall encapsulation
+    #TODO think of Extra functionality to add to project
+
+    #TODO Check overall encapsulation
 
 if __name__ == '__main__':
     main()

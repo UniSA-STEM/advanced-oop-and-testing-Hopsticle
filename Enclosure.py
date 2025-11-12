@@ -11,7 +11,7 @@ all_enclosures = []
 biomes = ['Plains', 'Arctic', 'Jungle', 'Swamp', 'Savannah', 'Water', 'Forest', 'Brush']
 import Animal
 
-#TODO implement size requirements for enclosure based on animal size
+
 class Enclosure:
     def __init__(self, name, biome: str, area: float, cleanliness=100):
         self.name = name
@@ -21,18 +21,20 @@ class Enclosure:
         self.animals = []
 
     #TODO return __str__ statement of current enclosure
+
     #TODO ensure when creating multiple enclosures of the same biome there are no errors in overwriting existing
 
     def new_enclosure(self):
         all_enclosures.append(self)
         print(f'New enclosure added: {self.name}, it\'s a {self.biome} type with a size of {self.area}m²')
         return self
+    #TODO new enclosure will take two days to build?
 
     def check_size(self, new_animal):
         '''Enforces two size requirements:
         1. Area must be 20x the largest animal's size.
         2. Area must be 5x the total combined size of all occupants.'''
-
+        #TODO implement size requirements for enclosure based on animal size
         all_occupants = self.animals + [new_animal]
         largest_animal_size = max(a.size for a in all_occupants)
         min_area_individual = largest_animal_size * 20
