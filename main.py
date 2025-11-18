@@ -8,8 +8,6 @@ This is my own work as defined by the University's Academic Integrity Policy.
 '''
 
 import random
-from linecache import clearcache
-
 import Staff
 import Enclosure
 import Animal
@@ -28,7 +26,7 @@ def main():
           '\n3.Custom\n')
     #TODO setter in main then getter in Zoo manager
     if starting_selection == '1':
-        ZooManager.get_default()
+        ZooManager.get_default(all_animals)
 
     elif starting_selection == '2':
         '''add 5 random enclosures with compatible animal, and one of each staff'''
@@ -43,9 +41,8 @@ def main():
             '''add random staff'''
             pass
 
-    zoo_manager = ZooManager(all_animals, all_staff, all_enclosures)
-    zoo_manager.start_day()
-
+    go = ZooManager()
+    go =
 
 #TODO implement main and zoom manager functions
 class ZooManager:
@@ -58,11 +55,15 @@ class ZooManager:
         self.new_animals = []
         self.new_enclosures = []
         self.new_staff = []
+        self.open_zoo = True
+
 
         self.menu_items = ('---Main Menu---'
                            '\n1. Animals'
                            '\n2. Staff'
-                           '\n3. Enclosures')
+                           '\n3. Enclosures'
+                           '\n4. End Day'
+                           '\n9. Exit')
 
         self.animal_menu = ('---Animals---'
                             '\n1. List All'
@@ -101,7 +102,10 @@ class ZooManager:
               f'\n 5 Enclosure were Constructed')
 
     def menu_main(self):
-        print(self.menu_items)
+        while self.open_zoo:
+            print(self.menu_items)
+            menu_choice = input('Which menu would you like to do? ')
+
 
     def menu_staff(self):
         print(self.staff_menu)
@@ -296,11 +300,11 @@ class ZooManager:
             else:
                 print('No animals became unhealthy overnight.. Phew!!')
 
-    def day_increment(self, cleanliness):
+    def day_increment(self):
         self.day_index += 1
         self.sick_animal()
-        for found in self.all_enclosures:
-            self.cleanliness -= 5
+        for animal in self.all_enclosures:
+            animal.cleanliness -= 5
 
     # TODO with each new day list changes if any, from overnight
     def day_summary(self):
@@ -330,7 +334,11 @@ class ZooManager:
         else:
             print('No new staff were added today')
 
-
+    def grand_opening(self):
+        print('Grand opening of the day:')
+        while self.open_zoo:
+            self.menu_main()
+            self.day_summary()
 
     #TODO implement way of incrementing days with actions required.
 

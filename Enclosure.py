@@ -11,7 +11,6 @@ all_enclosures = []
 biomes = ['Plains', 'Arctic', 'Jungle', 'Swamp', 'Savannah', 'Water', 'Forest', 'Brush']
 import Animal
 
-
 class Enclosure:
     def __init__(self, name, biome: str, area: float, cleanliness=100):
         self.name = name

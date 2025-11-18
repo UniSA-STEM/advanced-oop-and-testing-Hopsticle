@@ -11,7 +11,6 @@ import random
 from abc import ABC, abstractmethod
 
 import Animal
-import Enclosure
 
 def load_names(filename='Names'):
     try:
