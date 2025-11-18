@@ -8,6 +8,8 @@ This is my own work as defined by the University's Academic Integrity Policy.
 '''
 
 import random
+from linecache import clearcache
+
 import Staff
 import Enclosure
 import Animal
@@ -51,7 +53,11 @@ class ZooManager:
     def __init__(self):
         self.all_animals = Animal.all_animals
         self.all_staff = Staff.all_staff
-        self.all_enclosures = all_enclosures
+        self.all_enclosures = Enclosure.all_enclosures
+        self.new_animals = []
+        self.new_enclosures = []
+        self.new_staff = []
+        self.cleanliness = Enclosure.Enclosure.get_cleanliness
 
         self.menu_items = ('---Main Menu---'
                            '\n1. Animals'
@@ -81,11 +87,11 @@ class ZooManager:
                                '\n5. Remove Enclosure')
 
     def set_default(self):
-        all_animals = []
+        self.all_animals = []
         '''lion, penguin, red panda, barracuda, dingo'''
-        all_staff = []
+        self.all_staff = []
         '''Jesse, James, Ash'''
-        all_enclosures = []
+        self.all_enclosures = []
         '''savannah, arctic, jungle, water, brush'''
 
     def get_default(self):
@@ -186,17 +192,17 @@ class ZooManager:
 
     def menu_add_animal(self, animal_object):
         '''Attempts to add an animal, running all checks.'''
-        if animal_object.biome != self.biome:
+        if animal_object.biome != Enclosure.biome:
             print(
                 f'Couldn\'t add {animal_object.name}: Wrong Biome. Needs {animal_object.biome}, found {self.biome}.')
             return
         # TODO when adding new animal ensure there is an enclosure ready to move into with enough space
-        if not self.check_size(animal_object):
+        if not Enclosure.Enclosure.check_size(animal_object):
             print(
                 f'Failed to add {animal_object.name}: Not enough space (Required {animal_object.get_min_enclosure_area()}m²).')
             return
         # TODO Takes a day for animal to arrive,
-        if not self.check_safety(animal_object):
+        if not Enclosure.Enclosure.check_safety(animal_object):
             return
 
     def menu_remove_animal(self):
@@ -225,22 +231,51 @@ class ZooManager:
             print(f'* {animal.name}')
 
     def sick_animal(self):
-        sick_calculator = random.randint(0, 100)
-        if sick_calculator > 95:
+        sick_chance = random.randint(0, 100)
+        if sick_chance > 95:
             random_animal = random.choice(list(self.all_animals))
             random_animal.health = 0
             print(f'{random_animal.name} is sick and needs to see a Vet')
         else:
             print('No animals became unhealthy overnight.. Phew!!')
 
-    def day_increment(self):
+    def day_increment(self, cleanliness):
         self.day_index += 1
         self.sick_animal()
-        for self.all_enclosures:
-            Enclosure.Enclosure.cleanliness() -= 5
+        for found in self.all_enclosures:
+            self.cleanliness -= 5
+
+    # TODO with each new day list changes if any, from overnight
+    def day_summary(self):
+
+        print('Summary of the day:')
+        if self.new_animals:
+            print('New Animals Added:')
+            for animal in self.new_animals:
+                print(f'\n{animal.name}')
+                self.new_animals = []
+        else:
+            print('No new animals were added today')
+        if self.new_enclosures:
+            print('New Enclosures Added:')
+            for new in self.new_enclosures:
+
+                print(f'\n{new.name}')
+                self.new_enclosures = []
+        else:
+            print('No new enclosures were added today')
+        if self.new_staff:
+            print('New Staff Added:')
+            for new in self.new_staff:
+                print(f'\n{new.name}')
+                self.new_staff = []
+        else:
+            print('No new staff were added today')
+
+
 
     #TODO implement way of incrementing days with actions required.
-    #TODO with each new day list changes if any2, from overnight
+
     #TODO think of Extra functionality to add to project
 
     #TODO Check overall encapsulation

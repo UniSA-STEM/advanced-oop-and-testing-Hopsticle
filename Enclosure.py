@@ -22,8 +22,8 @@ class Enclosure:
 
     def __str__(self):
         return (f'Enclosure: {self.name}'
-                f'Biome: {self.biome}'
-                f'Animals: {self.animals}')
+                f'\nBiome: {self.biome}'
+                f'\nAnimals: {self.animals}')
 
 
     #TODO ensure when creating multiple enclosures of the same biome there are no errors in overwriting existing - shouldn't unique objects
@@ -101,5 +101,9 @@ class Enclosure:
         occupants = ','.join(f'{a.name}, {a.species}' for a in self.animals)
         return f'The {self.name} has {occupants} animals'
 
-    def get_enclosure_type(self):
+    def get_biome(self):
         return self.biome
+
+
+    def get_cleanliness(self):
+        return self.cleanliness

@@ -26,7 +26,8 @@ animal_ID = f'{animal_ID_index:03d}'
 
 class Animal(ABC):
     def __init__(self, name=random.choice(names), species=None, age=0, diet=None, size=None, is_cold_blooded=False,
-                 sound=None, biome=None, health=None):
+                 sound=None, biome=None, health=100):
+
         self.name = name
         self.species = species
         self.age = age
@@ -39,6 +40,7 @@ class Animal(ABC):
         self.check_size = Enclosure.Enclosure.check_size
         self.all_animals = all_animals
         self.ID = animal_ID
+        self.check_safety = Enclosure.Enclosure.check_safety
 
     @abstractmethod
     def speak(self):
