@@ -53,14 +53,11 @@ class ZooManager:
     day_index = 0
     def __init__(self):
         self.all_animals = Animal.all_animals
-        self.animals_by_diet = Animal.Animal.get_listed_by_diet(self.all_animals)
         self.all_staff = Staff.all_staff
         self.all_enclosures = Enclosure.all_enclosures
-        self.biome = Enclosure.Enclosure.get_biome(self.all_enclosures)
         self.new_animals = []
         self.new_enclosures = []
         self.new_staff = []
-        self.cleanliness = Enclosure.Enclosure.get_cleanliness
 
         self.menu_items = ('---Main Menu---'
                            '\n1. Animals'
@@ -146,6 +143,12 @@ class ZooManager:
         sorted_by_cleanliness =sorted(self.all_enclosures, key=lambda enclosure: enclosure.cleanliness)
         print(sorted_by_cleanliness)
 
+    def list_by_cleanliness(self):
+        enclosure_by_cleanliness = sorted(all_enclosures,
+                                          key = lambda enclosure: enclosure.cleanliness)
+        print('Enclosures by cleanliness:')
+        for index, enclosure in enumerate(enclosure_by_cleanliness):
+            print(f'{index + 1}. {self.name} | Cleanliness: {self.cleanliness}')
 
     def menu_add_enclosure(self):
             name = input('Enter Enclosure Name: ')
@@ -166,11 +169,59 @@ class ZooManager:
     def menu_remove_enclosure(self):
         print(f'{all_enclosures}')
         enclosure_to_remove = input('Which Enclosure do you want to close?').capitalize()
-        self.all_enclosures.remove(enclosure_to_remove)
-        print(f'Successfully removed {enclosure_to_remove}')
+        for enclosure in self.all_enclosures:
+            all_enclosures.remove(enclosure_to_remove)
+            print(f'Successfully removed {enclosure_to_remove}')
 
     def menu_animals(self):
         return self.animal_menu
+
+    def list_animals_by_biome(self, target_biome):
+        print(f'\n--- Animals in the {target_biome} Enclosure ---')
+        found = [animal for animal in self.all_animals if animal.biome == target_biome]
+
+        if not found:
+            print(f'No animals currently assigned to the {target_biome} enclosure.')
+            return
+
+        for animal in found:
+            print(f'* {animal.name} the {animal.species} says: {animal.speak()}')
+
+    def menu_list_all_animals(self):
+        return self.all_animals
+
+    def set_animals_by_diet(self):
+        meat_diet = []
+        for animal in self.all_animals:
+            if animal.diet == 'Meat':
+                meat_diet.append(animal.name)
+        plant_diet = []
+        for animal in self.all_animals:
+            if animal.diet == 'Plant':
+                plant_diet.append(animal.name)
+
+
+    def get_listed_by_diet(self):
+        diet_choice = input('Would you like to see:'
+                            '\n1. Carnivores'
+                            '\n2. Herbivores')
+        if diet_choice == '1':
+            for animal in self.meat_diet:
+                print(f'*\n{animal.name}')
+        elif diet_choice == '2':
+            for animal in self.plant_diet:
+                print(f'*\n{animal.name}')
+        else:
+            print('Invalid choice.')
+
+    def menu_health_card_menu(self):
+        self.menu_list_all_animals()
+        animal_health_card = input('Which animal would you like to see?')
+        if animal_health_card not in self.all_animals:
+            print(f'Invalid choice.')
+            return
+        else:
+            self.health_record()
 
     def menu_list_all_animals(self):
         for animal in self.all_animals:
@@ -202,8 +253,10 @@ class ZooManager:
         for animal in self.all_animals:
             print(f'*{animal.name} the {animal.species}')
         animal_to_remove = input('Enter Animal Name: ').capitalize()
-        self.all_animals.remove(animal_to_remove)
-        print(f'{animal_to_remove} was sent back to the wild! Goodbye...')
+        for animal in all_animals:
+            if animal is animal_to_remove:
+                all_animals.remove(animal_to_remove)
+                print(f'{animal_to_remove} was sent back to the wild! Goodbye...')
 
     def enclosure_menu(self):
         print(self.enclosure_menu)

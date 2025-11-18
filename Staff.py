@@ -48,7 +48,7 @@ class Zookeeper(Staff):
         return random.choice(staff_responses)
 
     def clean_enclosure(self):
-        Enclosure.Enclosure.list_by_cleanliness(self.name)
+        self.list_by_cleanliness(self.name)
         clean = input('Which enclosure should be cleaned?')
         pass
 

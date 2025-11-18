@@ -83,52 +83,7 @@ class Animal(ABC):
         #TODO assign ID to new animal and increment ID index
         self.animal_ID_index += 1
 
-    def list_animals_by_biome(self, target_biome):
-        print(f'\n--- Animals in the {target_biome} Enclosure ---')
-        found = [animal for animal in self.all_animals if animal.biome == target_biome]
 
-        if not found:
-            print(f'No animals currently assigned to the {target_biome} enclosure.')
-            return
-
-        for animal in found:
-            print(f'* {animal.name} the {animal.species} says: {animal.speak()}')
-
-    def menu_list_all_animals(self):
-        return self.all_animals
-
-    def set_animals_by_diet(self):
-        meat_diet = []
-        for animal in self.all_animals:
-            if animal.diet == 'Meat':
-                meat_diet.append(animal.name)
-        plant_diet = []
-        for animal in self.all_animals:
-            if animal.diet == 'Plant':
-                plant_diet.append(animal.name)
-
-
-    def get_listed_by_diet(self):
-        diet_choice = input('Would you like to see:'
-                            '\n1. Carnivores'
-                            '\n2. Herbivores')
-        if diet_choice == '1':
-            for animal in self.meat_diet:
-                print(f'*\n{animal.name}')
-        elif diet_choice == '2':
-            for animal in self.plant_diet:
-                print(f'*\n{animal.name}')
-        else:
-            print('Invalid choice.')
-
-    def menu_health_card_menu(self):
-        self.menu_list_all_animals()
-        animal_health_card = input('Which animal would you like to see?')
-        if animal_health_card not in self.all_animals:
-            print(f'Invalid choice.')
-            return
-        else:
-            self.health_record()
 
     # TODO Format health Records
     def health_record(self):
