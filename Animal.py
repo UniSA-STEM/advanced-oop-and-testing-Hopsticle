@@ -11,6 +11,8 @@ from abc import ABC, abstractmethod
 import Enclosure
 import random
 all_animals = []
+meat_diet = []
+plant_diet = []
 
 def load_names(filename='Names'):
     try:
@@ -39,8 +41,11 @@ class Animal(ABC):
         self.health = health
         self.check_size = Enclosure.Enclosure.check_size
         self.all_animals = all_animals
+        self.animal_ID_index = animal_ID_index
         self.ID = animal_ID
         self.check_safety = Enclosure.Enclosure.check_safety
+        self.meat_diet = meat_diet
+        self.plant_diet = plant_diet
 
     @abstractmethod
     def speak(self):
@@ -76,7 +81,7 @@ class Animal(ABC):
         all_animals.append(animal_object)
         print(f'{animal_object.name} the {animal_object.species} added to {self.name}.')
         #TODO assign ID to new animal and increment ID index
-        animal_ID_index += 1
+        self.animal_ID_index += 1
 
     def list_animals_by_biome(self, target_biome):
         print(f'\n--- Animals in the {target_biome} Enclosure ---')
@@ -92,7 +97,7 @@ class Animal(ABC):
     def menu_list_all_animals(self):
         return self.all_animals
 
-    def menu_list_all_by_diet(self):
+    def set_animals_by_diet(self):
         meat_diet = []
         for animal in self.all_animals:
             if animal.diet == 'Meat':
@@ -101,14 +106,17 @@ class Animal(ABC):
         for animal in self.all_animals:
             if animal.diet == 'Plant':
                 plant_diet.append(animal.name)
+
+
+    def get_listed_by_diet(self):
         diet_choice = input('Would you like to see:'
-              '\n1. Carnivores'
-              '\n2. Herbivores')
+                            '\n1. Carnivores'
+                            '\n2. Herbivores')
         if diet_choice == '1':
-            for animal in meat_diet:
+            for animal in self.meat_diet:
                 print(f'*\n{animal.name}')
         elif diet_choice == '2':
-            for animal in plant_diet:
+            for animal in self.plant_diet:
                 print(f'*\n{animal.name}')
         else:
             print('Invalid choice.')
@@ -133,6 +141,12 @@ class Animal(ABC):
             f'\n|                                        |'
             f'\n|                                        |'
             f'\n|________________________________________|')
+
+    def list_by_health(self):
+        animals_sorted_by_health = sorted(self.all_animals,
+                                          key= lambda animals: animals.health)
+        for index, animal in enumerate(animals_sorted_by_health):
+            print(f'{index + 1}. {animal.name} | Health: {animal.health}')
 
     def menu_remove_animal(self):
         print(self.all_animals)

@@ -10,6 +10,9 @@ This is my own work as defined by the University's Academic Integrity Policy.
 import random
 from abc import ABC, abstractmethod
 
+import Animal
+import Enclosure
+
 def load_names(filename='Names'):
     try:
         with open(filename, 'r') as file:
@@ -23,7 +26,6 @@ all_staff = []
 staff_responses = ['Yes?', 'What you want?', 'What...?', 'Me busy, leave me alone!', 'Me not that kind of orc!',
                    'Work, work', 'Okie Dokie', 'Something need doing?']
 
-#TODO Start basic addition of staff and their roles
 class Staff(ABC):
     def __init__(self, name=random.choice(names), function=None):
         self.name = name
@@ -46,7 +48,11 @@ class Zookeeper(Staff):
         return random.choice(staff_responses)
 
     def clean_enclosure(self):
+        Enclosure.Enclosure.list_by_cleanliness(self.name)
+        clean = input('Which enclosure should be cleaned?')
         pass
+
+#TODO implement actions that need to be undertaken by staff based on animal health and enclosure cleanliness
 
 class Veterinarian(Staff):
     def __init__(self, name=random.choice(names)):
@@ -56,13 +62,14 @@ class Veterinarian(Staff):
         return 'Who\'s hurt?'
 
     def heal_animal(self, animal):
+        Animal.Animal.list_by_health(self.name)
+        heal = input('Which animal should be healed?')
         pass
 
+#TODO one admin required for each other 4 staff, just because why not..? they do nothing really ;)
 class Admin(Staff):
     def __init__(self, name=random.choice(names)):
         super().__init__(name, 'Admin')
 
     def speak(self):
         return random.choice(staff_responses)
-
-#TODO implement actions that need to be undertaken by staff based on animal health and enclosure cleanliness

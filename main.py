@@ -49,11 +49,14 @@ def main():
 
 #TODO implement main and zoom manager functions
 class ZooManager:
+    '''Contains the overall function of the Zoo Manager, holding the ability to drive and select from menus'''
     day_index = 0
     def __init__(self):
         self.all_animals = Animal.all_animals
+        self.animals_by_diet = Animal.Animal.get_listed_by_diet(self.all_animals)
         self.all_staff = Staff.all_staff
         self.all_enclosures = Enclosure.all_enclosures
+        self.biome = Enclosure.Enclosure.get_biome(self.all_enclosures)
         self.new_animals = []
         self.new_enclosures = []
         self.new_staff = []
@@ -96,7 +99,9 @@ class ZooManager:
 
     def get_default(self):
         self.set_default()
-        pass
+        print(f'Five animals were added'
+              f'\n 3 Staff were added'
+              f'\n 5 Enclosure were Constructed')
 
     def menu_main(self):
         print(self.menu_items)
@@ -112,13 +117,15 @@ class ZooManager:
         # for staff in
         pass
 
+    #TODO staff can only perform a number of actions, then you will need more staff or things will get dirty
     def menu_staff_actions(self):
         '''clean, feed, heal'''
         pass
 
+
     def menu_add_staff(self):
         '''new staff, random choice name, append all staff'''
-        #TODO add staff takes three days. add volunteers immediately?
+        #TODO add staff takes three days. add volunteers immediately? volunteers at all?
         pass
 
     def menu_remove_staff(self):
@@ -131,9 +138,9 @@ class ZooManager:
             return
 
         print('\n--- All Enclosures ---')
-        for i, enclosure in enumerate(self.all_enclosures):
+        for index, enclosure in enumerate(self.all_enclosures):
             occupants = enclosure.get_occupants()
-            print(f'{i + 1}. {enclosure.name} ({enclosure.biome}, {enclosure.area}m²) - Occupants: {occupants}')
+            print(f'{index + 1}. {enclosure.name} ({enclosure.biome}, {enclosure.area}m²) - Occupants: {occupants}')
 
     def menu_list_by_cleanliness(self):
         sorted_by_cleanliness =sorted(self.all_enclosures, key=lambda enclosure: enclosure.cleanliness)
@@ -171,28 +178,14 @@ class ZooManager:
                   f'\n*{animal.name}')
 
     def menu_list_all_by_diet(self):
-        meat_diet = []
-        for animal in self.all_animals:
-            if animal.diet == 'Meat':
-                meat_diet.append(animal.diet)
-        plant_diet = []
-        for animal in self.all_animals:
-            if animal.diet == 'Plant':
-                plant_diet.append(animal.diet)
-        diet_choice = input('Would you like to see:'
-                            '\n1. Carnivores'
-                            '\n2. Herbivores')
-        if diet_choice == '1':
-            print(f'\n{meat_diet}')
-        else:
-            print(f'\n{plant_diet}')
+        return self.animals_by_diet
 
     def menu_health_card_menu(self):
         pass
 
     def menu_add_animal(self, animal_object):
         '''Attempts to add an animal, running all checks.'''
-        if animal_object.biome != Enclosure.biome:
+        if animal_object.biome != self.biome:
             print(
                 f'Couldn\'t add {animal_object.name}: Wrong Biome. Needs {animal_object.biome}, found {self.biome}.')
             return
@@ -210,9 +203,7 @@ class ZooManager:
             print(f'*{animal.name} the {animal.species}')
         animal_to_remove = input('Enter Animal Name: ').capitalize()
         self.all_animals.remove(animal_to_remove)
-        print(f'{animal_to_remove} was sent back to the wild!')
-
-
+        print(f'{animal_to_remove} was sent back to the wild! Goodbye...')
 
     def enclosure_menu(self):
         print(self.enclosure_menu)
@@ -230,14 +221,27 @@ class ZooManager:
         for animal in found:
             print(f'* {animal.name}')
 
+    #TODO if an animal gets sick 80% chance another in the enclosure also gets sick if not tended to.. sick for too long die...?
     def sick_animal(self):
-        sick_chance = random.randint(0, 100)
-        if sick_chance > 95:
-            random_animal = random.choice(list(self.all_animals))
-            random_animal.health = 0
-            print(f'{random_animal.name} is sick and needs to see a Vet')
-        else:
-            print('No animals became unhealthy overnight.. Phew!!')
+        sickness_spread = False
+        sick_animals =[]
+        for animal in self.all_animals:
+            sick_animals.append(animal.name)
+            if animal.health == 0:
+                sickness_spread = True
+
+        if sickness_spread:
+            pass
+
+
+        if not sickness_spread:
+            sick_chance = random.randint(0, 100)
+            if sick_chance > 95:
+                random_animal = random.choice(list(self.all_animals))
+                random_animal.health = 0
+                print(f'{random_animal.name} is sick and needs to see a Vet')
+            else:
+                print('No animals became unhealthy overnight.. Phew!!')
 
     def day_increment(self, cleanliness):
         self.day_index += 1
@@ -254,6 +258,7 @@ class ZooManager:
             for animal in self.new_animals:
                 print(f'\n{animal.name}')
                 self.new_animals = []
+                Animal.Animal.set_animals_by_diet(animal.diet)
         else:
             print('No new animals were added today')
         if self.new_enclosures:

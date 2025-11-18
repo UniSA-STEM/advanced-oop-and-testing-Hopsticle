@@ -104,6 +104,12 @@ class Enclosure:
     def get_biome(self):
         return self.biome
 
-
     def get_cleanliness(self):
         return self.cleanliness
+
+    def list_by_cleanliness(self):
+        enclosure_by_cleanliness = sorted(all_enclosures,
+                                          key = lambda enclosure: enclosure.cleanliness)
+        print('Enclosures by cleanliness:')
+        for index, enclosure in enumerate(enclosure_by_cleanliness):
+            print(f'{index + 1}. {self.name} | Cleanliness: {self.cleanliness}')
