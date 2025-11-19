@@ -11,23 +11,19 @@ import random
 from abc import ABC, abstractmethod
 
 import Animal
-
-def load_names(filename='Names'):
-    try:
-        with open(filename, 'r') as file:
-            return file.read().splitlines()
-    except FileNotFoundError:
-        print('Names file not found.')
-        return []
-names = load_names()
+import Utilities
 
 all_staff = []
 staff_responses = ['Yes?', 'What you want?', 'What...?', 'Me busy, leave me alone!', 'Me not that kind of orc!',
                    'Work, work', 'Okie Dokie', 'Something need doing?']
 
 class Staff(ABC):
-    def __init__(self, name=random.choice(names), function=None):
-        self.name = name
+    def __init__(self, name=None, function=None):
+
+        if name is None:
+            self.name = Utilities.get_random_name()
+        else:
+            self.name = name
         self.function = function
 
 
@@ -40,7 +36,7 @@ class Staff(ABC):
 
 
 class Zookeeper(Staff):
-    def __init__(self, name=random.choice(names)):
+    def __init__(self, name=None):
         super().__init__(name, 'Zookeeper')
 
     def speak(self):
@@ -54,7 +50,7 @@ class Zookeeper(Staff):
 #TODO implement actions that need to be undertaken by staff based on animal health and enclosure cleanliness
 
 class Veterinarian(Staff):
-    def __init__(self, name=random.choice(names)):
+    def __init__(self, name=None):
         super().__init__(name, 'Veterinarian')
 
     def speak(self):
@@ -67,7 +63,7 @@ class Veterinarian(Staff):
 
 #TODO one admin required for each other 4 staff, just because why not..? they do nothing really ;)
 class Admin(Staff):
-    def __init__(self, name=random.choice(names)):
+    def __init__(self, name=None):
         super().__init__(name, 'Admin')
 
     def speak(self):

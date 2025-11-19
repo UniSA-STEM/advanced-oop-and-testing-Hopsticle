@@ -8,30 +8,22 @@ This is my own work as defined by the University's Academic Integrity Policy.
 '''
 
 from abc import ABC, abstractmethod
-import Enclosure
-import random
+import Utilities
 
 all_animals = []
 meat_diet = []
 plant_diet = []
 
-def load_names(filename='Names'):
-    try:
-        with open(filename, 'r') as file:
-            return file.read().splitlines()
-    except FileNotFoundError:
-        print('Names file not found.')
-        return []
-names = load_names()
-
-animal_ID_index = 0
-animal_ID = f'{animal_ID_index:03d}'
-
 class Animal(ABC):
-    def __init__(self, name=random.choice(names), species=None, age=0, diet=None, size=None, is_cold_blooded=False,
+    def __init__(self, name=None, species=None, age=0, diet=None, size=None, is_cold_blooded=False,
                  sound=None, biome=None, health=100):
 
-        self.name = name
+        if name is None:
+            self.name = Utilities.names
+        else:
+            self.name = name
+        self.species = species
+        self.age = age
         self.species = species
         self.age = age
         self.diet = diet
@@ -40,13 +32,12 @@ class Animal(ABC):
         self.sound = sound
         self.biome = biome
         self.health = health
-        self.check_size = Enclosure.Enclosure.check_size
         self.all_animals = all_animals
-        self.animal_ID_index = animal_ID_index
-        self.ID = animal_ID
-        self.check_safety = Enclosure.Enclosure.check_safety
         self.meat_diet = meat_diet
         self.plant_diet = plant_diet
+
+    animal_ID_index = 0
+    animal_ID = f'{animal_ID_index:03d}'
 
     @abstractmethod
     def speak(self):
@@ -88,15 +79,18 @@ class Animal(ABC):
 
     # TODO Format health Records
     def health_record(self):
-        return print(
-               f'________________________________________'
-            f'\n|  Name: {self.name}    Age: {self.age}  |'
-            f'\n|  Species: {self.species}               |'
-            f'\n|  Diet: {self.diet}                     |'
-            f'\n|  Health Condition: {self.health}       |'
-            f'\n|                                        |'
-            f'\n|                                        |'
-            f'\n|________________________________________|')
+        CARD_WIDTH = 40
+        print(f'________________________________________')
+        name_and_age = f'Name: {self.name}    Age: {self.age}'
+        print(f'|  {name_and_age:<{CARD_WIDTH - 5}}  |')
+        species_info = f'Species: {self.species}'
+        print(f'|  {species_info:<{CARD_WIDTH - 5}}  |')
+        diet_info = f'Diet: {self.diet}'
+        print(f'|  {diet_info:<{CARD_WIDTH - 5}}  |')
+        health_info = f'Health Condition: {self.health}%'
+        print(f'|  {health_info:<{CARD_WIDTH - 5}}  |')
+        print(f'|  {"":<{CARD_WIDTH - 5}}  |')
+        print(f'|_______________________________________|')
 
     def list_by_health(self):
         animals_sorted_by_health = sorted(self.all_animals,
