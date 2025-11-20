@@ -15,8 +15,13 @@ meat_diet = []
 plant_diet = []
 
 class Animal(ABC):
+    _next_id = 1
+
     def __init__(self, name=None, species=None, age=0, diet=None, size=None, is_cold_blooded=False,
                  sound=None, biome=None, health=100):
+
+        self.animal_id = f'A{Animal._next_id:03d}'  # Example: A001, A002
+        Animal._next_id += 1
 
         if name is None:
             self.name = Utilities.names
@@ -35,9 +40,6 @@ class Animal(ABC):
         self.all_animals = all_animals
         self.meat_diet = meat_diet
         self.plant_diet = plant_diet
-
-    animal_ID_index = 0
-    animal_ID = f'{animal_ID_index:03d}'
 
     @abstractmethod
     def speak(self):
@@ -77,7 +79,7 @@ class Animal(ABC):
 
 
 
-    # TODO Format health Records
+    # TODO work out how to display health cards if two animals have same name
     def health_record(self):
         CARD_WIDTH = 40
         print(f'________________________________________')
@@ -262,7 +264,7 @@ class TasmanianDevil(Marsupial):
         return True
 
 class Ailuridae(Animal):
-    def __init__(self, name, species=None, age=0, diet='Meat/Plants', size=.5, is_cold_blooded=False, sound=None,
+    def __init__(self, name, species=None, age=0, diet='Plants', size=.5, is_cold_blooded=False, sound=None,
                  biome='Jungle'):
         super().__init__(name, species, age, diet, size, is_cold_blooded, sound, biome)
 
