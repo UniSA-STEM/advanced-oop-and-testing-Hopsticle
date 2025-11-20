@@ -8,10 +8,10 @@ This is my own work as defined by the University's Academic Integrity Policy.
 '''
 
 import random
-import Enclosure
+
 import Animal
+import Enclosure
 import Staff
-import Utilities
 
 all_animals = []
 all_staff = []

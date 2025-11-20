@@ -9,7 +9,6 @@ This is my own work as defined by the University's Academic Integrity Policy.
 
 all_enclosures = []
 
-import Animal
 
 class Enclosure:
     biomes = ['Plains', 'Arctic', 'Jungle', 'Swamp', 'Savannah', 'Water', 'Forest', 'Brush']

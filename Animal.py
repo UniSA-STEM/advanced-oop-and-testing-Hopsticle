@@ -8,6 +8,7 @@ This is my own work as defined by the University's Academic Integrity Policy.
 '''
 
 from abc import ABC, abstractmethod
+
 import Utilities
 
 all_animals = []
