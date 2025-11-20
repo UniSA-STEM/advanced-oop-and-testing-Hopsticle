@@ -371,20 +371,21 @@ class ZooManager:
         print(f'Invalid Selection: Animal ID {animal_selection_id} not found.')
 
     def menu_animals_add(self, animal_object):
-        #TODO add a list of species for the choose from, fix whatever is happening here.
-        '''Attempts to add an animal, running all checks.'''
-        if animal_object.biome != self.biome:
-            print(
-                f'Couldn\'t add {animal_object.name}: Wrong Biome. Needs {animal_object.biome}, found {self.biome}.')
-            return
-        # TODO when adding new animal ensure there is an enclosure ready to move into with enough space
-        if not Enclosure.Enclosure.check_size(animal_object):
-            print(
-                f'Failed to add {animal_object.name}: Not enough space (Required {animal_object.get_min_enclosure_area()}m²).')
-            return
-        # TODO Takes a day for animal to arrive,
-        if not Enclosure.Enclosure.check_safety(animal_object):
-            return
+        Animal.Animal.get_all_concrete_animal_types()
+        # #TODO add a list of species for the choose from, fix whatever is happening here.
+        # '''Attempts to add an animal, running all checks.'''
+        # if animal_object.biome != self.biome:
+        #     print(
+        #         f'Couldn\'t add {animal_object.name}: Wrong Biome. Needs {animal_object.biome}, found {self.biome}.')
+        #     return
+        # # TODO when adding new animal ensure there is an enclosure ready to move into with enough space
+        # if not Enclosure.Enclosure.check_size(animal_object):
+        #     print(
+        #         f'Failed to add {animal_object.name}: Not enough space (Required {animal_object.get_min_enclosure_area()}m²).')
+        #     return
+        # # TODO Takes a day for animal to arrive,
+        # if not Enclosure.Enclosure.check_safety(animal_object):
+        #     return
 
     def menu_animals_remove(self):
         '''Attempts to remove an animal, running all checks.'''

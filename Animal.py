@@ -54,35 +54,10 @@ class Animal(ABC):
         return f'{self.ID}: {self.name} is a {self.age} year old {self.species}'
 
     # TODO Add animals with random names - Fine do to unique objects
-
-
-
-    def add_animal(self, animal_object):
-        '''Attempts to add an animal, running all checks.'''
-        if animal_object.biome != self.biome:
-            print(
-                f'Couldn\'t add {animal_object.name}: Wrong Biome. Needs {animal_object.biome}, found {self.biome}.')
-            return
-        # TODO when adding new animal ensure there is an enclosure ready to move into with enough space
-        if not self.check_size(animal_object):
-            print(
-                f'Failed to add {animal_object.name}: Not enough space (Required {animal_object.get_min_enclosure_area()}m²).')
-            return
-        #TODO Takes a day for animal to arrive,
-        if not self.check_safety(animal_object):
-            return
-
-        all_animals.append(animal_object)
-        print(f'{animal_object.name} the {animal_object.species} added to {self.name}.')
-        #TODO assign ID to new animal and increment ID index
-        self.animal_ID_index += 1
-
-
-
     # TODO work out how to display health cards if two animals have same name
     def health_record(self):
         CARD_WIDTH = 40
-        print(f'________________________________________')
+        print(f' _______________________________________')
         name_and_age = f'Name: {self.name}    Age: {self.age}'
         print(f'|  {name_and_age:<{CARD_WIDTH - 5}}  |')
         species_info = f'Species: {self.species}'
@@ -91,7 +66,8 @@ class Animal(ABC):
         print(f'|  {diet_info:<{CARD_WIDTH - 5}}  |')
         health_info = f'Health Condition: {self.health}%'
         print(f'|  {health_info:<{CARD_WIDTH - 5}}  |')
-        print(f'|  {"":<{CARD_WIDTH - 5}}  |')
+        animal_cry = f'"{self.speak()}"'
+        print(f'|  {animal_cry :<{CARD_WIDTH - 5}}  |')
         print(f'|_______________________________________|')
 
     def list_by_health(self):
@@ -100,14 +76,14 @@ class Animal(ABC):
         for index, animal in enumerate(animals_sorted_by_health):
             print(f'{index + 1}. {animal.name} | Health: {animal.health}')
 
-    def menu_remove_animal(self):
-        print(self.all_animals)
-        remove_animal = input('Which animal would you like to remove?')
-        if remove_animal not in self.all_animals:
-            print(f'\n{remove_animal} is not a valid animal.')
-        else:
-            self.all_animals.remove(remove_animal)
+    def get_all_concrete_animal_types(self):
+        '''Finds all concrete classes that inherit from Animal'''
+        all_classes = []
 
+        for base_class in Animal.__subclasses__():
+            for concrete_class in base_class.__subclasses__():
+                all_classes.append(concrete_class.__name__)
+        return sorted(all_classes)
 
 class Reptile(Animal):
     def __init__(self, name, species=None, age=0, diet='Meat', size=None, is_cold_blooded=True, sound=None, biome=None):
