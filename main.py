@@ -46,7 +46,6 @@ def main():
     go.is_open()
 
 
-# TODO implement main and zoom manager functions
 class ZooManager:
     '''Contains the overall function of the Zoo Manager, holding the ability to drive and select from menus'''
     day_index = 0
@@ -107,18 +106,17 @@ class ZooManager:
 
         # 3. Acquire Animals
         simba = Animal.Lion('Simba')  # Needs Savannah
-        pingu = Animal.Penguin('Pingu')
         pingu = Animal.Penguin('Pingu')# Needs Arctic
         mei = Animal.RedPanda('Mei')  # Needs Jungle
         barry = Animal.Barracuda('Barry')  # Needs Water
         bingo = Animal.Dingo('Bingo')  # Needs Brush
         #TODO default adds animal based on new animals, regardless of whether the conditions are correct
-        new_animals = [simba, pingu, pingu, mei, barry, bingo]
+        new_animals = [simba, pingu, mei, barry, bingo]
 
+        # 4. Add animals to the correct biome
         print('...Assigning animals to enclosures...')
         savannah.add_animal(simba)
         arctic.add_animal(pingu)
-        jungle.add_animal(pingu)
         jungle.add_animal(mei)
         water.add_animal(barry)
         brush.add_animal(bingo)
@@ -171,7 +169,8 @@ class ZooManager:
                 self.day_increment()
                 return
             elif menu_choice == '9':
-                print('The zoo has been closed.')
+                print('Exiting Zoo Manager, see you next time :)')
+                self.open_zoo = False
 
     def menu_staff(self):
         print()
@@ -199,8 +198,15 @@ class ZooManager:
             print(f'* {staff.name} is a(n) {staff.function}')
 
     def menu_staff_by_job(self):
-        # for staff in
-        pass
+        jobs = {}
+        for staff in self.all_staff:
+            if staff.function not in jobs:
+                jobs[staff.function] = []
+            jobs[staff.function].append(staff.name)
+
+        print('\n--- Staff by Job Role ---')
+        for job, names in jobs.items():
+            print(f'**{job}** ({len(names)}): {', '.join(names)}')
 
     # TODO staff can only perform a number of actions, then you will need more staff or things will get dirty
     def menu_staff_actions(self):
@@ -209,12 +215,47 @@ class ZooManager:
 
     def menu_staff_add(self):
         '''new staff, random choice name, append all staff'''
-        # TODO add staff takes three days. add volunteers immediately? volunteers at all?
-        pass
+        print('--- New Staff ---')
+        staff_type = input('Select Staff Type: '
+                           '\n1. Zookeeper'
+                           '\n2. Veterinarian'
+                           '\n3. Admin'
+                           '\nSelection: ')
+
+        if staff_type in ('1', '2', '3'):
+            name = input('Enter Staff Name (Leave blank for random): ')
+
+            new_staff = None
+            if staff_type == '1':
+                new_staff = Staff.Zookeeper(name if name else None)
+            elif staff_type == '2':
+                new_staff = Staff.Veterinarian(name if name else None)
+            elif staff_type == '3':
+                new_staff = Staff.Admin(name if name else None)
+
+            self.all_staff.append(new_staff)
+            print(f'Successfully hired {new_staff.name} as a {new_staff.function}.')
+        else:
+            print('Invalid staff type selection.')
 
     def menu_staff_remove(self):
         '''remove staff from list'''
-        pass
+        print('\n--- Staff Termination Menu ---')
+        self.menu_staff_list_all()
+
+        staff_to_remove_name = input('Enter the name of the staff member to remove: ').capitalize()
+        staff_object_to_remove = None
+
+        for staff in self.all_staff:
+            if staff.name == staff_to_remove_name:
+                staff_object_to_remove = staff
+                break
+
+        if staff_object_to_remove:
+            self.all_staff.remove(staff_object_to_remove)
+            print(f'{staff_object_to_remove.name} ({staff_object_to_remove.function}) has been let go.')
+        else:
+            print(f'Staff member {staff_to_remove_name} not found.')
 
     def menu_enclosures(self):
         print()
@@ -225,7 +266,7 @@ class ZooManager:
             self.menu_enclosures_list_all()
             return
         elif staff_menu_input == '2':
-
+            self.menu_enclosures_by_biome()
             return
         elif staff_menu_input == '3':
             self.menu_enclosures_by_cleanliness()
@@ -237,6 +278,8 @@ class ZooManager:
             self.menu_enclosure_remove()
             return
 
+    #TODO increase enclosure size
+
     def menu_enclosures_list_all(self):
         if not self.all_enclosures:
             print('No enclosures have been built yet.')
@@ -246,6 +289,9 @@ class ZooManager:
         for index, enclosure in enumerate(self.all_enclosures):
             occupants = enclosure.get_occupants()
             print(f'{index + 1}. {enclosure.name} ({enclosure.biome}, {enclosure.area}m²) - Occupants: {occupants}')
+
+    def menu_enclosures_by_biome(self):
+        pass
 
     def menu_enclosures_by_cleanliness(self):
         enclosure_by_cleanliness = sorted(self.all_enclosures,
@@ -269,17 +315,25 @@ class ZooManager:
         new_enclosure = Enclosure.Enclosure(name, biome, area)
         new_enclosure.new_enclosure()
 
+        self.all_enclosures.append(new_enclosure)
+
         print(f'Successfully added {name}!')
-        #TODO created successfully,  but is not added to all_enclosures list
 
     def menu_enclosure_remove(self):
+        print('Enclosure Closure')
         for enclosure in self.all_enclosures:
             print(f'{enclosure.name}')
+
         enclosure_to_remove = input('Which Enclosure do you want to close? ').capitalize()
+        enclosure_object_to_remove = None
         for enclosure in self.all_enclosures:
             if enclosure.name == enclosure_to_remove:
-                self.all_enclosures.remove(enclosure_to_remove)
-        print(f'Successfully removed {enclosure_to_remove}')
+                enclosure_object_to_remove = enclosure
+        if enclosure_object_to_remove:
+            self.all_enclosures.remove(enclosure_object_to_remove)
+            print(f'Successfully removed {enclosure_object_to_remove.name}')
+        else:
+            print(f'Enclosure {enclosure_to_remove} not found.')
 
     def menu_animals(self):
         print()
@@ -318,7 +372,7 @@ class ZooManager:
                 meat_diet.append(animal.name)
         plant_diet = []
         for animal in self.all_animals:
-            if animal.diet == 'Plant':
+            if animal.diet == 'Plants':
                 plant_diet.append(animal.name)
 
     def menu_animals_by_diet(self):
@@ -332,7 +386,7 @@ class ZooManager:
                     print(f'* {animal.name}')
         elif diet_choice == '2':
             for animal in self.all_animals:
-                if animal.diet == 'Plant':
+                if animal.diet == 'Plants':
                     print(f'* {animal.name}')
         else:
             print('Invalid choice.')
@@ -340,7 +394,7 @@ class ZooManager:
     def menu_animals_by_biome(self):
         for enclosure in self.all_enclosures:
             print(f'* {enclosure.name} | Biome: {enclosure.biome}')
-        target_biome = input('For which biome would you like the check on the animals of? ').capitalize()
+        target_biome = input('Which biome\'s inhabitants do you want to check? ').capitalize()
 
         print(f'\n--- Animals in the {target_biome} Enclosure ---')
         found = [animal for animal in self.all_animals if animal.biome == target_biome]
@@ -355,14 +409,11 @@ class ZooManager:
     def menu_animals_health_card(self):
         print('\n--- Animal Health Card Selection ---')
 
-        # 1. Display list with ID
         for animal in self.all_animals:
             print(f'* ID: {animal.animal_id} | {animal.name} the {animal.species}')
 
-        # 2. Select by ID
         animal_selection_id = input('Enter the ID of the animal (e.g., A001): ').upper()
 
-        # 3. Search for the ID
         for animal in self.all_animals:
             if animal_selection_id == animal.animal_id:
                 animal.health_record()
@@ -370,23 +421,36 @@ class ZooManager:
 
         print(f'Invalid Selection: Animal ID {animal_selection_id} not found.')
 
-    def menu_animals_add(self, animal_object):
-        Animal.Animal.get_all_concrete_animal_types()
-        # #TODO add a list of species for the choose from, fix whatever is happening here.
-        # '''Attempts to add an animal, running all checks.'''
-        # if animal_object.biome != self.biome:
-        #     print(
-        #         f'Couldn\'t add {animal_object.name}: Wrong Biome. Needs {animal_object.biome}, found {self.biome}.')
-        #     return
-        # # TODO when adding new animal ensure there is an enclosure ready to move into with enough space
-        # if not Enclosure.Enclosure.check_size(animal_object):
-        #     print(
-        #         f'Failed to add {animal_object.name}: Not enough space (Required {animal_object.get_min_enclosure_area()}m²).')
-        #     return
-        # # TODO Takes a day for animal to arrive,
-        # if not Enclosure.Enclosure.check_safety(animal_object):
-        #     return
+    def menu_animals_add(self):
+        print('\n--- Acquire New Animal ---')
+        available_species = Animal.Animal.get_all_concrete_animal_types()
+        print(f'Available Species: {', '.join(available_species)}')
 
+        species_choice = input('Enter the Species name: ')
+        name = input('Enter the Animal\'s Name (Leave blank for random): ')
+
+        try:
+            AnimalClass = getattr(Animal, species_choice)
+            new_animal = AnimalClass(name if name else None)
+
+        except (AttributeError, TypeError):
+            print(f'Invalid species: {species_choice} or creation error.')
+            return
+
+        suitable_enclosure = None
+        for enclosure in self.all_enclosures:
+            if enclosure.add_animal(new_animal):
+                suitable_enclosure = enclosure
+
+        if suitable_enclosure:
+            self.all_animals.append(new_animal)
+            print(
+                f'New arrival! {new_animal.name} the {new_animal.species} is settling into {suitable_enclosure.name}.')
+        else:
+            print(f'Unable to home {new_animal.name}. No suitable enclosure found.'
+                  f'\nAdd a new enclosure for this animal first')
+
+    #TODO Remove by ID, for animals of same name
     def menu_animals_remove(self):
         '''Attempts to remove an animal, running all checks.'''
         print('\n--- Animal Release Menu ---')
@@ -407,7 +471,6 @@ class ZooManager:
                 if animal_object_to_release in enclosure.animals:
                     enclosure.animals.remove(animal_object_to_release)
                     print(f'Removed {animal_object_to_release.name} from {enclosure.name}.')
-                    break  # Since an animal can only be in one enclosure, we can stop here
             print(f'{animal_to_remove_name} was sent back to the wild! Goodbye...')
         else:
             print(f'Invalid Selection: Animal {animal_to_remove_name} not found.')

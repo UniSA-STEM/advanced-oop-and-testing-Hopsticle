@@ -25,7 +25,7 @@ class Animal(ABC):
         Animal._next_id += 1
 
         if name is None:
-            self.name = Utilities.names
+            self.name = Utilities.get_random_name()
         else:
             self.name = name
         self.species = species
@@ -52,7 +52,7 @@ class Animal(ABC):
         pass
 
     def get_description(self):
-        return f'{self.ID}: {self.name} is a {self.age} year old {self.species}'
+        return f'{self.animal_id}: {self.name} is a {self.age} year old {self.species}'
 
     # TODO Add animals with random names - Fine do to unique objects
     # TODO work out how to display health cards if two animals have same name
@@ -77,11 +77,11 @@ class Animal(ABC):
         for index, animal in enumerate(animals_sorted_by_health):
             print(f'{index + 1}. {animal.name} | Health: {animal.health}')
 
-    def get_all_concrete_animal_types(self):
+    @classmethod
+    def get_all_concrete_animal_types(cls):
         '''Finds all concrete classes that inherit from Animal'''
         all_classes = []
-
-        for base_class in Animal.__subclasses__():
+        for base_class in cls.__subclasses__():
             for concrete_class in base_class.__subclasses__():
                 all_classes.append(concrete_class.__name__)
         return sorted(all_classes)
@@ -221,7 +221,7 @@ class Kangaroo(Marsupial):
         return 'Booiiiing'
 
 
-class Billy(Marsupial):
+class Bilby(Marsupial):
     def __init__(self, name, size=.5):
         super().__init__(name, 'Bilby', size=size)
 

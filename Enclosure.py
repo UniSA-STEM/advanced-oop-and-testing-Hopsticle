@@ -27,13 +27,13 @@ class Enclosure:
                 f'\nCleanliness: {self.cleanliness}')
 
 
-    #TODO ensure when creating multiple enclosures of the same biome there are no errors in overwriting existing - shouldn't unique objects
+    ##TODO when adding new enclosure, check to see if name already exists
 
     def new_enclosure(self):
         all_enclosures.append(self)
         print(f'New enclosure added: {self.name}, it\'s a {self.biome} type with a size of {self.area}m²')
         return self
-    #TODO new enclosure will take two days to build?
+    #TODO new enclosure will take two days to build? maybe?
 
     def check_size(self, new_animal):
         '''Checks if the animal fits based on size rules.'''
@@ -82,7 +82,7 @@ class Enclosure:
     def get_occupants(self):
         if not self.animals:
             return f'The {self.name} has no animals'
-        occupants = ','.join(f'{a.name}, {a.species}' for a in self.animals)
+        occupants = ','.join(f'{a.name}, ' for a in self.animals)
         return f'The {self.name} has {occupants} animals'
 
     def get_biome(self):
