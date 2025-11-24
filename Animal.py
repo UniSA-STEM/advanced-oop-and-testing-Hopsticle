@@ -21,24 +21,79 @@ class Animal(ABC):
     def __init__(self, name=None, species=None, age=0, diet=None, size=None, is_cold_blooded=False,
                  sound=None, biome=None, health=100):
 
-        self.animal_id = f'A{Animal._next_id:03d}'  # Example: A001, A002
+        self._animal_id = f'A{Animal._next_id:03d}'  # Example: A001, A002
         Animal._next_id += 1
 
         if name is None:
-            self.name = Utilities.get_random_name()
+            self._name = Utilities.get_random_name()
         else:
-            self.name = name
-        self.species = species
-        self.age = age
-        self.diet = diet
-        self.size = size
-        self.is_cold_blooded = is_cold_blooded
-        self.sound = sound
-        self.biome = biome
+            self._name = name
+        self._species = species
+        self._age = age
+        self._diet = diet
+        self._size = size
+        self._is_cold_blooded = is_cold_blooded
+        self._sound = sound
+        self._biome = biome
         self.health = health
         self.all_animals = all_animals
         self.meat_diet = meat_diet
         self.plant_diet = plant_diet
+
+    @property
+    def animal_id(self):
+        # Getter: Provides read-only access to the animal's unique ID.
+        return self._animal_id
+
+    @property
+    def name(self):
+        # Getter: Provides read access to the animal's name.
+        return self._name
+
+    @property
+    def species(self):
+        # Getter: Provides read access to the animal's species.
+        return self._species
+
+    @property
+    def age(self):
+        # Getter: Provides read access to the animal's age.
+        return self._age
+
+    @property
+    def diet(self):
+        # Getter: Provides read access to the animal's diet type.
+        return self._diet
+
+    @property
+    def size(self):
+        # Getter: Provides read access to the animal's volume.
+        return self._size
+
+    @property
+    def is_cold_blooded(self):
+        # Getter: Provides read access to the animal's cold-blooded status.
+        return self._is_cold_blooded
+
+    @property
+    def sound(self):
+        # Getter: Provides read access to the characteristic sound the animal makes.
+        return self._sound
+
+    @property
+    def biome(self):
+        # Getter: Provides read access to the animal's required environment/biome.
+        return self._biome
+
+    @property
+    def health(self):
+        # Getter: Provides read access to the animal's current health percentage.
+        return self._health
+
+    @health.setter
+    def health(self, value):
+        # Setter: Allows the health attribute to be modified while ensuring it stays between 0 and 100.
+        self._health = max(0, min(100, value))
 
     @abstractmethod
     def speak(self):
@@ -47,13 +102,12 @@ class Animal(ABC):
     @property
     @abstractmethod
     def is_predator(self):
+        # Abstract Property: Must be implemented to return True if the animal is a predator, False otherwise.
         pass
 
     def get_description(self):
         return f'{self.animal_id}: {self.name} is a {self.age} year old {self.species}'
 
-    # TODO Add animals with random names - Fine do to unique objects
-    # TODO work out how to display health cards if two animals have same name
     def health_record(self):
         CARD_WIDTH = 40
         name_and_age = f'Name: {self.name}    Age: {self.age}'

@@ -14,17 +14,45 @@ class Enclosure:
     biomes = ['Plains', 'Arctic', 'Jungle', 'Swamp', 'Savannah', 'Water', 'Forest', 'Brush']
 
     def __init__(self, name, biome: str, area: float, cleanliness=100):
-        self.name = name
-        self.biome = biome
-        self.area = area
+        self._name = name
+        self._biome = biome
+        self._area = area
         self.cleanliness = cleanliness
-        self.animals = []
+        self._animals = []
 
     def __str__(self):
         return (f'Enclosure: {self.name}'
                 f'\nBiome: {self.biome}'
                 f'\nAnimals: {self.animals}'
                 f'\nCleanliness: {self.cleanliness}')
+
+    # Read-Only Getters for Name, Biome, Area
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def biome(self):
+        return self._biome
+
+    @property
+    def area(self):
+        return self._area
+
+    @property
+    def animals(self):
+        # Provides read-only access to the list
+        return self._animals
+
+    # Getter/Setter for Cleanliness
+    @property
+    def cleanliness(self):
+        return self._cleanliness
+
+    @cleanliness.setter
+    def cleanliness(self, value):
+        # Ensures cleanliness is always between 0 and 100
+        self._cleanliness = max(0, min(100, value))
 
     def new_enclosure(self):
         all_enclosures.append(self)

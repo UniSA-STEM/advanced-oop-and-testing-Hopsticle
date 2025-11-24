@@ -22,10 +22,21 @@ class Staff(ABC):
     def __init__(self, name=None, function=None):
 
         if name is None:
-            self.name = Utilities.get_random_name()
+            self._name = Utilities.get_random_name()
         else:
-            self.name = name
-        self.function = function
+            self._name = name
+
+        self._function = function
+
+    @property
+    def name(self):
+        # Getter: Provides read access to the staff member's name.
+        return self._name
+
+    @property
+    def function(self):
+        # Getter: Provides read access to the staff member's function.
+        return self._function
 
     @abstractmethod
     def speak(self):

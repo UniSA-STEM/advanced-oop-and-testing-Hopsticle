@@ -47,21 +47,20 @@ class ZooManager:
     day_index = 0
 
     def __init__(self):
-        self.all_animals = []
-        self.all_staff = []
-        self.all_enclosures = []
-        self.new_animals = []
-        self.new_staff = []
-        self.new_enclosures = []
-        self.open_zoo = True
-
+        self._all_animals = all_animals
+        self._all_staff = all_staff
+        self._all_enclosures = all_enclosures
+        self._new_animals = []
+        self._new_staff = []
+        self._new_enclosures = []
+        self._day_index = 0
+        self._open_zoo = True
         self.menu_items = ('---Main Menu---'
                            '\n1. Animals'
                            '\n2. Staff'
                            '\n3. Enclosures'
                            '\n4. End Day'
                            '\n9. Exit')
-
         self.animal_menu = ('---Animals---'
                             '\n1. List All'
                             '\n2. List by Diet'
@@ -69,20 +68,87 @@ class ZooManager:
                             '\n4. Animal Health Card'
                             '\n5. Add Animal'
                             '\n6. Remove Animal')
-
         self.staff_menu = ('---Staff---'
                            '\n1. List All'
                            '\n2. List by Job'
                            '\n3. Staff Actions'
                            '\n4. Add Staff'
                            '\n5. Remove Staff')
-
         self.enclosure_menu = ('---Enclosure---'
                                '\n1. List All'
                                '\n2. List by Biome'
                                '\n3. List by Cleanliness'
                                '\n4. Add Enclosure'
                                '\n5. Remove Enclosure')
+
+    @property
+    def all_animals(self):
+        return self._all_animals
+
+    @property
+    def all_staff(self):
+        return self._all_staff
+
+    @property
+    def all_enclosures(self):
+        return self._all_enclosures
+
+    @property
+    def day_index(self):
+        return self._day_index
+
+    @property
+    def open_zoo(self):
+        return self._open_zoo
+
+    def day_increment(self):
+        self._day_index += 1
+        self.sick_animal()
+        for enclosure in self._all_enclosures:
+            enclosure.cleanliness -= 5
+
+    def day_summary(self):
+        '''This is used to output a summary of the changes that occurred during the day'''
+        print('*----------------------------------*')
+        print('Summary of the day:')
+
+        # Using protected attributes for internal list checks and clearing
+        if self._new_animals:
+            print()
+            print('New Animals Added:')
+            for animal in self._new_animals:
+                # Use animal properties (e.g., animal.animal_id, animal.name)
+                print(f'* ID: {animal.animal_id} | {animal.name} the {animal.species}')
+            self._new_animals = []
+        else:
+            print('No new animals were added today')
+
+        if self._new_enclosures:
+            print()
+            print('New Enclosures Added:')
+            for enclosure in self._new_enclosures:
+                # Use enclosure properties
+                print(f'{enclosure.name} ({enclosure.biome}, {enclosure.area}m²')
+            self._new_enclosures = []
+        else:
+            print('No new enclosures were added today')
+
+        if self._new_staff:
+            print()
+            print('New Staff Added:')
+            for staff in self._new_staff:
+                # Use staff properties
+                print(f'* {staff.name} is a(n) {staff.function}')
+            self._new_staff = []
+        else:
+            print('No new staff were added today')
+        print('*----------------------------------*')
+
+    def is_open(self):
+        # Use protected attribute
+        while self._open_zoo:
+            print()
+            self.menu_main()
 
     def get_default(self):
         '''This is used to create the objects for the Default Zoo settings.'''
@@ -449,7 +515,26 @@ class ZooManager:
         return enclosure_dictionary
 
     def menu_enclosures_by_biome(self):
-        pass
+        print('\n--- Enclosures Listed by Biome ---')
+
+        if not self.all_enclosures:
+            print('No enclosures have been built yet.')
+            return
+
+        biomes_map = {}
+        for enclosure in self.all_enclosures:
+            if enclosure.biome not in biomes_map:
+                biomes_map[enclosure.biome] = []
+            biomes_map[enclosure.biome].append(enclosure)
+
+        for biome in sorted(biomes_map.keys()):
+            print(f'\n[ {biome.upper()} BIOME ({len(biomes_map[biome])} Enclosures) ]')
+
+            for enclosure in biomes_map[biome]:
+                occupants = enclosure.get_occupants()
+
+                print(f'* {enclosure.name} ({enclosure.area}m²) - Cleanliness: {enclosure.cleanliness}%')
+                print(f'  - Occupants: {occupants}')
 
     def list_dirty_enclosures(self, min_cleanliness=80):
         '''Lists enclosures below a cleanliness threshold and returns a dict mapping selection ID to enclosure object.'''
@@ -696,57 +781,6 @@ class ZooManager:
                 print(f'{random_animal.name} is sick and needs to see a Vet')
             else:
                 print('No animals became unhealthy overnight.. Phew!!')
-
-    def day_increment(self):
-        self.day_index += 1
-        self.sick_animal()
-        for animal in self.all_enclosures:
-            animal.cleanliness -= 5
-        # TODO check length of all staff, inform in another admin is required
-
-    # TODO with each new day list changes if any, from overnight
-    def day_summary(self):
-        '''This is used to output a summary of the changes that occurred during the day'''
-        print('*----------------------------------*'
-              '\nSummary of the day:')
-
-        if self.new_animals:
-            print()
-            print('New Animals Added:')
-            for animal in self.new_animals:
-                print(f'* ID: {animal.animal_id} | {animal.name} the {animal.species}')
-            self.new_animals = []
-        else:
-            print('No new animals were added today')
-
-        if self.new_enclosures:
-            print()
-            print('New Enclosures Added:')
-            for enclosure in self.new_enclosures:
-                print(f'{enclosure.name} ({enclosure.biome}, {enclosure.area}m²')
-            self.new_enclosures = []
-        else:
-            print('No new enclosures were added today')
-
-        if self.new_staff:
-            print()
-            print('New Staff Added:')
-            for staff in self.new_staff:
-                print(f'* {staff.name} is a(n) {staff.function}')
-            self.new_staff = []
-        else:
-            print('No new staff were added today')
-        print('*----------------------------------*')
-
-    def is_open(self):
-        while self.open_zoo:
-            print()
-            self.menu_main()
-
-    # TODO think of Extra functionality to add to project
-
-    # TODO Check overall encapsulation
-
 
 if __name__ == '__main__':
     main()
