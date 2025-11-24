@@ -11,23 +11,32 @@ from abc import ABC, abstractmethod
 
 import Utilities
 
+# Global lists
 all_animals = []
 meat_diet = []
 plant_diet = []
 
 class Animal(ABC):
-    _next_id = 1
+    '''
+    Abstract Base Class for all animals in the zoo.
+    Enforces abstract methods (speak, is_predator) that must be implemented by subclasses.
+    '''
+    _next_id = 1 # Class variable for generating unique animal IDs
 
     def __init__(self, name=None, species=None, age=0, diet=None, size=None, is_cold_blooded=False,
                  sound=None, biome=None, health=100):
 
-        self._animal_id = f'A{Animal._next_id:03d}'  # Example: A001, A002
+        # Generate unique animal ID (e.g., A001, A002)
+        self._animal_id = f'A{Animal._next_id:03d}'
         Animal._next_id += 1
 
+        # Set name (uses a random name if none provided)
         if name is None:
             self._name = Utilities.get_random_name()
         else:
             self._name = name
+            
+        # Initialize core animal attributes
         self._species = species
         self._age = age
         self._diet = diet
@@ -35,80 +44,93 @@ class Animal(ABC):
         self._is_cold_blooded = is_cold_blooded
         self._sound = sound
         self._biome = biome
-        self.health = health
+        self.health = health # Uses the setter for validation
+        
+        # Assign global lists as instance attributes (note: this just creates references to the global lists)
         self.all_animals = all_animals
         self.meat_diet = meat_diet
         self.plant_diet = plant_diet
 
+    # --- Property Getters (Read-Only Access) ---
+
     @property
     def animal_id(self):
-        # Getter: Provides read-only access to the animal's unique ID.
+        # Provides read-only access to the animal's unique ID.
         return self._animal_id
 
     @property
     def name(self):
-        # Getter: Provides read access to the animal's name.
+        # Provides read access to the animal's name.
         return self._name
 
     @property
     def species(self):
-        # Getter: Provides read access to the animal's species.
+        # Provides read access to the animal's species.
         return self._species
 
     @property
     def age(self):
-        # Getter: Provides read access to the animal's age.
+        # Provides read access to the animal's age.
         return self._age
 
     @property
     def diet(self):
-        # Getter: Provides read access to the animal's diet type.
+        # Provides read access to the animal's diet type.
         return self._diet
 
     @property
     def size(self):
-        # Getter: Provides read access to the animal's volume.
+        # Provides read access to the animal's volume.
         return self._size
 
     @property
     def is_cold_blooded(self):
-        # Getter: Provides read access to the animal's cold-blooded status.
+        # Provides read access to the animal's cold-blooded status.
         return self._is_cold_blooded
 
     @property
     def sound(self):
-        # Getter: Provides read access to the characteristic sound the animal makes.
+        # Provides read access to the characteristic sound the animal makes.
         return self._sound
 
     @property
     def biome(self):
-        # Getter: Provides read access to the animal's required environment/biome.
+        # Provides read access to the animal's required environment/biome.
         return self._biome
 
     @property
     def health(self):
-        # Getter: Provides read access to the animal's current health percentage.
+        # Provides read access to the animal's current health percentage.
         return self._health
+
+    # --- Health Setter (With Validation) ---
 
     @health.setter
     def health(self, value):
-        # Setter: Allows the health attribute to be modified while ensuring it stays between 0 and 100.
+        # Allows health to be modified while clamping the value between 0 and 100.
         self._health = max(0, min(100, value))
+
+    # --- Abstract Methods (Must be implemented by concrete subclasses) ---
 
     @abstractmethod
     def speak(self):
+        '''Returns the characteristic sound the animal makes.'''
         pass
 
     @property
     @abstractmethod
     def is_predator(self):
-        # Abstract Property: Must be implemented to return True if the animal is a predator, False otherwise.
+        '''Returns True if the animal is a predator, False otherwise.'''
         pass
 
+    # --- Instance Methods ---
+
     def get_description(self):
+        '''Returns a basic descriptive string of the animal.'''
         return f'{self.animal_id}: {self.name} is a {self.age} year old {self.species}'
 
     def health_record(self):
+        '''Prints a formatted health card with key animal details.'''
         CARD_WIDTH = 40
         name_and_age = f'Name: {self.name}    Age: {self.age}'
         species_info = f'Species: {self.species}'
@@ -116,6 +138,7 @@ class Animal(ABC):
         health_info = f'Health Condition: {self.health}%'
         animal_cry = f'"{self.speak()}"'
 
+        # Print the formatted health card
         print(f' _______________________________________')
         print(f'|  {name_and_age:<{CARD_WIDTH - 5}}  |')
         print(f'|  {species_info:<{CARD_WIDTH - 5}}  |')
@@ -125,21 +148,31 @@ class Animal(ABC):
         print(f'|_______________________________________|')
 
     def list_by_health(self):
+        '''Sorts and prints all animals (using the global list) by their current health.'''
+        # Sort animals based on the health attribute
         animals_sorted_by_health = sorted(self.all_animals,
                                           key= lambda animals: animals.health)
         for index, animal in enumerate(animals_sorted_by_health):
             print(f'{index + 1}. {animal.name} | Health: {animal.health}')
 
+    # --- Class Method ---
+
     @classmethod
     def get_all_concrete_animal_types(cls):
-        '''Finds all concrete classes that inherit from Animal'''
+        '''Finds and returns the names of all non-abstract classes that inherit from Animal.'''
         all_classes = []
+        # Iterate over immediate subclasses
         for base_class in cls.__subclasses__():
+            # Iterate over concrete subclasses
             for concrete_class in base_class.__subclasses__():
                 all_classes.append(concrete_class.__name__)
         return sorted(all_classes)
 
+
+# --- Subclasses defining Animal groups and species ---
+
 class Reptile(Animal):
+    '''Base class for cold-blooded, meat-eating reptiles (default).'''
     def __init__(self, name, species=None, age=0, diet='Meat', size=None, is_cold_blooded=True, sound=None, biome=None):
         super().__init__(name, species, age, diet, size, is_cold_blooded, sound, biome)
 
@@ -148,9 +181,11 @@ class Reptile(Animal):
 
     @property
     def is_predator(self):
-        return True
+        return True # Default for reptiles
+
 
 class Crocodile(Reptile):
+    '''A specific type of Reptile with default attributes.'''
     def __init__(self, name, size=3, biome='Swamp'):
         super().__init__(name, 'Crocodile', size=size, biome=biome)
 
@@ -159,14 +194,16 @@ class Crocodile(Reptile):
 
 
 class Snake(Reptile):
+    '''A specific type of Reptile with default attributes.'''
     def __init__(self, name, size=1.5, biome='Forest'):
         super().__init__(name, 'Snake', size=size, biome=biome)
 
     def speak(self):
-        return super().speak() + 'sssss'
+        return super().speak() + 'sssss' # Overrides speak to add 'sssss' to 'Hiss'
 
 
 class Iguana(Reptile):
+    '''A specific type of Reptile with default attributes.'''
     def __init__(self, name, size=1, biome='Brush'):
         super().__init__(name, 'Iguana', size=size, biome=biome)
 
@@ -175,7 +212,9 @@ class Iguana(Reptile):
 
 
 class Turtle(Reptile):
+    '''A specific type of Reptile (Herbivore) with default attributes.'''
     def __init__(self, name, diet='Plants', size=1, biome='Water'):
+        # Overrides the default 'Meat' diet from Reptile
         super().__init__(name, 'Turtle', diet=diet, size=size, biome=biome)
 
     def speak(self):
@@ -183,6 +222,7 @@ class Turtle(Reptile):
 
 
 class Feline(Animal):
+    '''Base class for warm-blooded, meat-eating felines.'''
     def __init__(self, name, species=None, age=0, diet='Meat', size=2, is_cold_blooded=False, sound=None,
                  biome='Jungle'):
         super().__init__(name, species, age, diet, size, is_cold_blooded, sound, biome)
@@ -192,9 +232,11 @@ class Feline(Animal):
 
     @property
     def is_predator(self):
-        return True
+        return True # Default for felines
+
 
 class Lion(Feline):
+    '''A specific type of Feline, setting Savannah biome.'''
     def __init__(self, name, biome='Savannah'):
         super().__init__(name, 'Lion', biome=biome)
 
@@ -203,6 +245,7 @@ class Lion(Feline):
 
 
 class Tiger(Feline):
+    '''A specific type of Feline.'''
     def __init__(self, name):
         super().__init__(name, 'Tiger')
 
@@ -211,6 +254,7 @@ class Tiger(Feline):
 
 
 class Panther(Feline):
+    '''A specific type of Feline.'''
     def __init__(self, name):
         super().__init__(name, 'Panther')
 
@@ -219,18 +263,22 @@ class Panther(Feline):
 
 
 class Canine(Animal):
+    '''Base class for warm-blooded, meat-eating canines.'''
     def __init__(self, name, species=None, age=0, diet='Meat', size=None, is_cold_blooded=False, sound=None,
                  biome='Brush'):
         super().__init__(name, species, age, diet, size, is_cold_blooded, sound, biome)
 
     def speak(self):
+        # Uses the sound attribute set in subclasses
         return self.sound
 
     @property
     def is_predator(self):
-        return True
+        return True # Default for canines
+
 
 class Dingo(Canine):
+    '''A specific type of Canine.'''
     def __init__(self, name, size=1):
         super().__init__(name, 'Dingo', size=size)
 
@@ -239,6 +287,7 @@ class Dingo(Canine):
 
 
 class Wolf(Canine):
+    '''A specific type of Canine, setting Forest biome.'''
     def __init__(self, name, size=1.5, biome='Forest'):
         super().__init__(name, 'Wolf', size=size, biome=biome)
 
@@ -247,6 +296,7 @@ class Wolf(Canine):
 
 
 class FennecFox(Canine):
+    '''A specific type of Canine.'''
     def __init__(self, name, size=.5):
         super().__init__(name, 'Fennec Fox', size=size)
 
@@ -255,18 +305,22 @@ class FennecFox(Canine):
 
 
 class Marsupial(Animal):
+    '''Base class for warm-blooded, plant-eating marsupials (default).'''
     def __init__(self, name, species=None, age=0, diet='Plants', size=None, is_cold_blooded=False, sound=None,
                  biome='Brush'):
         super().__init__(name, species, age, diet, size, is_cold_blooded, sound, biome)
 
     def speak(self):
+        # Uses the sound attribute set in subclasses
         return self.sound
 
     @property
     def is_predator(self):
-        return False
+        return False # Default for marsupials
+
 
 class Kangaroo(Marsupial):
+    '''A specific type of Marsupial.'''
     def __init__(self, name, size=1.5):
         super().__init__(name, 'Kangaroo', size=size)
 
@@ -275,6 +329,7 @@ class Kangaroo(Marsupial):
 
 
 class Bilby(Marsupial):
+    '''A specific type of Marsupial.'''
     def __init__(self, name, size=.5):
         super().__init__(name, 'Bilby', size=size)
 
@@ -283,7 +338,9 @@ class Bilby(Marsupial):
 
 
 class TasmanianDevil(Marsupial):
+    '''A specific type of Marsupial (Carnivore) which is a predator.'''
     def __init__(self, name, size=.5):
+        # Overrides the default 'Plants' diet from Marsupial
         super().__init__(name, 'Tasmanian Devil', diet='Meat', size=size)
 
     def speak(self):
@@ -291,9 +348,11 @@ class TasmanianDevil(Marsupial):
 
     @property
     def is_predator(self):
-        return True
+        return True # Overrides the default False from Marsupial
+
 
 class Ailuridae(Animal):
+    '''Base class for Red Panda family (Herbivore).'''
     def __init__(self, name, species=None, age=0, diet='Plants', size=.5, is_cold_blooded=False, sound='Squeak',
                  biome='Jungle'):
         super().__init__(name, species, age, diet, size, is_cold_blooded, sound, biome)
@@ -303,9 +362,11 @@ class Ailuridae(Animal):
 
     @property
     def is_predator(self):
-        return False
+        return False # Default for Ailuridae
+
 
 class RedPanda(Ailuridae):
+    '''A specific type of Ailuridae.'''
     def __init__(self, name):
         super().__init__(name, 'Red Panda')
 
@@ -314,6 +375,7 @@ class RedPanda(Ailuridae):
 
 
 class Fish(Animal):
+    '''Base class for cold-blooded aquatic life.'''
     def __init__(self, name, species=None, age=0, diet='Plants', size=None, is_cold_blooded=True, sound='Glub Glub',
                  biome='Water'):
         super().__init__(name, species, age, diet, size, is_cold_blooded, sound, biome)
@@ -323,10 +385,13 @@ class Fish(Animal):
 
     @property
     def is_predator(self):
-        return False
+        return False # Default for Fish
+
 
 class Barracuda(Fish):
+    '''A specific type of Fish (Carnivore) which is a predator.'''
     def __init__(self, name, diet='Meat', size=1):
+        # Overrides the default 'Plants' diet from Fish
         super().__init__(name, 'Barracuda', diet=diet, size=size)
 
     def speak(self):
@@ -334,9 +399,11 @@ class Barracuda(Fish):
 
     @property
     def is_predator(self):
-        return True
+        return True # Overrides the default False from Fish
+
 
 class ClownFish(Fish):
+    '''A specific type of Fish.'''
     def __init__(self, name, size=.2):
         super().__init__(name, 'Clown Fish', size=size)
 
@@ -345,7 +412,9 @@ class ClownFish(Fish):
 
 
 class Piranha(Fish):
+    '''A specific type of Fish (Carnivore) which is a predator.'''
     def __init__(self, name, diet='Meat', size=.2):
+        # Overrides the default 'Plants' diet from Fish
         super().__init__(name, 'Piranha', diet=diet, size=size)
 
     def speak(self):
@@ -353,9 +422,11 @@ class Piranha(Fish):
 
     @property
     def is_predator(self):
-        return True
+        return True # Overrides the default False from Fish
+
 
 class PufferFish(Fish):
+    '''A specific type of Fish.'''
     def __init__(self, name, size=.2):
         super().__init__(name, 'Puffer Fish', size=size)
 
@@ -364,6 +435,7 @@ class PufferFish(Fish):
 
 
 class Bird(Animal):
+    '''Base class for warm-blooded birds.'''
     def __init__(self, name, species=None, age=0, diet='Plants', size=.5, is_cold_blooded=False, sound='KACAAAW',
                  biome='Brush'):
         super().__init__(name, species, age, diet, size, is_cold_blooded, sound, biome)
@@ -373,10 +445,13 @@ class Bird(Animal):
 
     @property
     def is_predator(self):
-        return False
+        return False # Default for Bird
+
 
 class Penguin(Bird):
+    '''A specific type of Bird (Carnivore) which is a predator, setting Arctic biome.'''
     def __init__(self, name, diet='Meat', biome='Arctic'):
+        # Overrides the default 'Plants' diet from Bird
         super().__init__(name, 'Penguin', diet=diet, biome=biome)
 
     def speak(self):
@@ -384,9 +459,11 @@ class Penguin(Bird):
 
     @property
     def is_predator(self):
-        return True
+        return True # Overrides the default False from Bird
+
 
 class Pheasant(Bird):
+    '''A specific type of Bird.'''
     def __init__(self, name):
         super().__init__(name, 'Pheasant')
 
@@ -395,6 +472,7 @@ class Pheasant(Bird):
 
 
 class Peacock(Bird):
+    '''A specific type of Bird.'''
     def __init__(self, name):
         super().__init__(name, 'Peacock')
 
