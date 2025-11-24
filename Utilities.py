@@ -1,6 +1,6 @@
 '''
 File: Utilities.py
-Description: This module contains a number of commands that can stored and pulled from outside of the working modules
+Description: This module contains a number of commands that can stored and pulled from outside the working modules
 Author: Joshua Cordner
 ID: corjy027
 Username: corjy027

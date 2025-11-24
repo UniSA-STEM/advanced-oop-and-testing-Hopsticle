@@ -12,6 +12,7 @@ import random
 import Animal
 import Enclosure
 import Staff
+from Staff import Veterinarian, Zookeeper, Admin
 
 all_animals = []
 all_staff = []
@@ -26,7 +27,7 @@ def main():
                                '\n1.Default'
                                '\n2.Randomised '
                                '\n3.Custom\n')
-    # TODO setter in main then getter in Zoo manager
+
     if starting_selection == '1':
         go.get_default()
 
@@ -86,6 +87,7 @@ class ZooManager:
                                '\n5. Remove Enclosure')
 
     def get_default(self):
+        '''This is used to create the objects for the Default Zoo settings.'''
         print('--- Generating Default Zoo ---')
 
         # 1. Construct Enclosures
@@ -106,11 +108,10 @@ class ZooManager:
 
         # 3. Acquire Animals
         simba = Animal.Lion('Simba')  # Needs Savannah
-        pingu = Animal.Penguin('Pingu')# Needs Arctic
+        pingu = Animal.Penguin('Pingu')  # Needs Arctic
         mei = Animal.RedPanda('Mei')  # Needs Jungle
         barry = Animal.Barracuda('Barry')  # Needs Water
         bingo = Animal.Dingo('Bingo')  # Needs Brush
-        #TODO default adds animal based on new animals, regardless of whether the conditions are correct
         new_animals = [simba, pingu, mei, barry, bingo]
 
         # 4. Add animals to the correct biome
@@ -152,6 +153,7 @@ class ZooManager:
         print('Random Zoo Created!')
 
     def menu_main(self):
+        '''Holds the main menu for driving down to sub-menus'''
         while self.open_zoo:
             print(self.menu_items)
             menu_choice = input('Which menu would you like to explore? ')
@@ -173,6 +175,7 @@ class ZooManager:
                 self.open_zoo = False
 
     def menu_staff(self):
+        '''Holds the main staff menu for selecting sub-menus'''
         print()
         print(self.staff_menu)
         staff_menu_input = input('Which Staff menu would you like to explore? ')
@@ -211,6 +214,22 @@ class ZooManager:
     # TODO staff can only perform a number of actions, then you will need more staff or things will get dirty
     def menu_staff_actions(self):
         '''clean, feed, heal'''
+        for staff in self.all_staff:
+            print(f'* {staff.name} is a(n) {staff.function}')
+        staff_selection = input('Which staff would you like to command? ')
+        for staff in self.all_staff:
+            if staff.name == staff_selection:
+                print('What you have them do')
+                if staff.function == Veterinarian:
+                    #heal# Veterinarian = heal
+                    pass
+                elif staff.function == Zookeeper:
+                    #clean or feed#Zookeeper = clean and feed
+                    pass
+                elif staff.function == Admin:
+                    print('Don\'t be silly, admin\'s dont do anything')
+            else:
+                print('There is no staff with that name')
         pass
 
     def menu_staff_add(self):
@@ -258,6 +277,7 @@ class ZooManager:
             print(f'Staff member {staff_to_remove_name} not found.')
 
     def menu_enclosures(self):
+        '''Holds the main Enclosure menu for selecting sub-menus'''
         print()
         print(self.enclosure_menu)
 
@@ -278,7 +298,14 @@ class ZooManager:
             self.menu_enclosure_remove()
             return
 
-    #TODO increase enclosure size
+    def menu_increase_enclosure_size(self):
+        for enclosure in self.all_enclosures:
+            print(f'* {enclosure.name}')
+        enclosure_increase = input('Which enclosure wou you like to expand?').title()
+        for enclosure in self.all_enclosures:
+            if enclosure_increase == enclosure.name:
+                new_size = input('Enter the new enclosure size: ')
+                enclosure.area = new_size
 
     def menu_enclosures_list_all(self):
         if not self.all_enclosures:
@@ -300,9 +327,11 @@ class ZooManager:
         for index, enclosure in enumerate(enclosure_by_cleanliness):
             print(f'{index + 1}. {enclosure.name} | Cleanliness: {enclosure.cleanliness}')
 
-
     def menu_enclosure_add(self):
-        name = input('Enter Enclosure Name: ')
+        name = input('Enter Enclosure Name: ').title()
+        if name in self.all_enclosures:
+            print('Enclosure already exists.')
+            return
         print(f'Available Biomes: {Enclosure.Enclosure.biomes}')
         biome = input('Enter Biome: ')
 
@@ -324,7 +353,7 @@ class ZooManager:
         for enclosure in self.all_enclosures:
             print(f'{enclosure.name}')
 
-        enclosure_to_remove = input('Which Enclosure do you want to close? ').capitalize()
+        enclosure_to_remove = input('Which Enclosure do you want to close? ').title()
         enclosure_object_to_remove = None
         for enclosure in self.all_enclosures:
             if enclosure.name == enclosure_to_remove:
@@ -336,6 +365,7 @@ class ZooManager:
             print(f'Enclosure {enclosure_to_remove} not found.')
 
     def menu_animals(self):
+        '''Holds the main Animal menu for selecting sub-menus'''
         print()
         print(self.animal_menu)
         animals_menu_input = input('Which Animals menu would you like to explore? ')
@@ -359,11 +389,10 @@ class ZooManager:
             self.menu_animals_remove()
             return
 
-
     def menu_animals_list_all(self):
-        print(f'Animals in no order:')
+        print(f'All animals in the Zoo:')
         for animal in self.all_animals:
-                  print(f'* {animal.name}')
+            print(f'* ID: {animal.animal_id} | {animal.name} the {animal.species}')
 
     def set_animals_by_diet(self):
         meat_diet = []
@@ -383,11 +412,11 @@ class ZooManager:
         if diet_choice == '1':
             for animal in self.all_animals:
                 if animal.diet == 'Meat':
-                    print(f'* {animal.name}')
+                    print(f'* ID: {animal.animal_id} | {animal.name} the {animal.species}')
         elif diet_choice == '2':
             for animal in self.all_animals:
                 if animal.diet == 'Plants':
-                    print(f'* {animal.name}')
+                    print(f'* ID: {animal.animal_id} | {animal.name} the {animal.species}')
         else:
             print('Invalid choice.')
 
@@ -404,7 +433,7 @@ class ZooManager:
             return
 
         for animal in found:
-            print(f'* {animal.name}')
+            print(f'* ID: {animal.animal_id} | {animal.name} the {animal.species}')
 
     def menu_animals_health_card(self):
         print('\n--- Animal Health Card Selection ---')
@@ -450,7 +479,7 @@ class ZooManager:
             print(f'Unable to home {new_animal.name}. No suitable enclosure found.'
                   f'\nAdd a new enclosure for this animal first')
 
-    #TODO Remove by ID, for animals of same name
+    # TODO Remove by ID, for animals of same name
     def menu_animals_remove(self):
         '''Attempts to remove an animal, running all checks.'''
         print('\n--- Animal Release Menu ---')

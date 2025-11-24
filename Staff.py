@@ -17,6 +17,7 @@ all_staff = []
 staff_responses = ['Yes?', 'What you want?', 'What...?', 'Me busy, leave me alone!', 'Me not that kind of orc!',
                    'Work, work', 'Okie Dokie', 'Something need doing?']
 
+
 class Staff(ABC):
     def __init__(self, name=None, function=None):
 
@@ -25,7 +26,6 @@ class Staff(ABC):
         else:
             self.name = name
         self.function = function
-
 
     @abstractmethod
     def speak(self):
@@ -42,12 +42,16 @@ class Zookeeper(Staff):
     def speak(self):
         return random.choice(staff_responses)
 
+    def feed_animals(self):
+        pass
+
     def clean_enclosure(self):
         self.menu_enclosures_by_cleanliness(self.name)
         clean = input('Which enclosure should be cleaned?')
         pass
 
-#TODO implement actions that need to be undertaken by staff based on animal health and enclosure cleanliness
+
+# TODO implement actions that need to be undertaken by staff based on animal health and enclosure cleanliness
 
 class Veterinarian(Staff):
     def __init__(self, name=None):
@@ -61,10 +65,13 @@ class Veterinarian(Staff):
         heal = input('Which animal should be healed?')
         pass
 
-#TODO one admin required for each other 4 staff, just because why not..? they do nothing really ;)
+
 class Admin(Staff):
     def __init__(self, name=None):
         super().__init__(name, 'Admin')
 
     def speak(self):
         return random.choice(staff_responses)
+
+    def do_things(self):
+        pass
