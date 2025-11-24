@@ -30,8 +30,6 @@ class Animal(ABC):
             self.name = name
         self.species = species
         self.age = age
-        self.species = species
-        self.age = age
         self.diet = diet
         self.size = size
         self.is_cold_blooded = is_cold_blooded
@@ -58,16 +56,17 @@ class Animal(ABC):
     # TODO work out how to display health cards if two animals have same name
     def health_record(self):
         CARD_WIDTH = 40
-        print(f' _______________________________________')
         name_and_age = f'Name: {self.name}    Age: {self.age}'
-        print(f'|  {name_and_age:<{CARD_WIDTH - 5}}  |')
         species_info = f'Species: {self.species}'
-        print(f'|  {species_info:<{CARD_WIDTH - 5}}  |')
         diet_info = f'Diet: {self.diet}'
-        print(f'|  {diet_info:<{CARD_WIDTH - 5}}  |')
         health_info = f'Health Condition: {self.health}%'
-        print(f'|  {health_info:<{CARD_WIDTH - 5}}  |')
         animal_cry = f'"{self.speak()}"'
+
+        print(f' _______________________________________')
+        print(f'|  {name_and_age:<{CARD_WIDTH - 5}}  |')
+        print(f'|  {species_info:<{CARD_WIDTH - 5}}  |')
+        print(f'|  {diet_info:<{CARD_WIDTH - 5}}  |')
+        print(f'|  {health_info:<{CARD_WIDTH - 5}}  |')
         print(f'|  {animal_cry :<{CARD_WIDTH - 5}}  |')
         print(f'|_______________________________________|')
 
@@ -241,7 +240,7 @@ class TasmanianDevil(Marsupial):
         return True
 
 class Ailuridae(Animal):
-    def __init__(self, name, species=None, age=0, diet='Plants', size=.5, is_cold_blooded=False, sound=None,
+    def __init__(self, name, species=None, age=0, diet='Plants', size=.5, is_cold_blooded=False, sound='Squeak',
                  biome='Jungle'):
         super().__init__(name, species, age, diet, size, is_cold_blooded, sound, biome)
 

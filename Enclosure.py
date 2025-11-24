@@ -41,41 +41,52 @@ class Enclosure:
         # Rule 1: Area must be 20x the largest animal
         largest_size = max(a.size for a in all_occupants)
         if self.area < (largest_size * 20):
-            print(f'Refused: {new_animal.name} is too big for this enclosure.')
-            return False
+            # Change print to return (False, reason)
+            return False, f'{new_animal.name} is too big for this enclosure.'
 
         # Rule 2: Area must be 5x combined size
         total_size = sum(a.size for a in all_occupants)
         if self.area < (total_size * 5):
-            print(f'Refused: Enclosure too crowded for {new_animal.name}.')
-            return False
+            # Change print to return (False, reason)
+            return False, f'Enclosure too crowded for {new_animal.name}.'
 
-        return True
+        return True, None  # Return True and None for no message
 
+    # Update check_safety to return status and message
     def check_safety(self, new_animal):
         '''Checks predator/prey compatibility.'''
         if not self.animals:
-            return True  # Safe if empty
+            return True, None  # Safe if empty
 
         has_predator = any(a.is_predator for a in self.animals) or new_animal.is_predator
         has_prey = any(not a.is_predator for a in self.animals) or (not new_animal.is_predator)
 
         # If we have both predators and prey, it's unsafe
         if has_predator and has_prey:
-            print(f'Refused: Safety Risk! Cannot mix Predators and Prey.')
-            return False
-        return True
+            # Change print to return (False, reason)
+            return False, 'Safety Risk! Cannot mix Predators and Prey.'
+        return True, None
 
+    # Update add_animal to consolidate and return status and message
     def add_animal(self, animal_object):
+        # Check 1: Biome
         if animal_object.biome != self.biome:
-            print(f'Refused: {animal_object.name} needs {animal_object.biome}, this is {self.biome}.')
-            return False
+            # Change print to return (False, reason)
+            return False, f'{animal_object.name} needs {animal_object.biome}, this is {self.biome}.'
 
-        if self.check_size(animal_object) and self.check_safety(animal_object):
-            self.animals.append(animal_object)
-            print(f'Success: {animal_object.name} added to {self.name}.')
-            return True
-        return False
+        # Check 2 & 3: Size and Safety (using updated methods)
+        size_ok, size_message = self.check_size(animal_object)
+        if not size_ok:
+            return False, size_message
+
+        safety_ok, safety_message = self.check_safety(animal_object)
+        if not safety_ok:
+            return False, safety_message
+
+        # All checks passed
+        self.animals.append(animal_object)
+        # Change print to return (True, message)
+        return True, f'Success: {animal_object.name} added to {self.name}.'
 
     def get_occupants(self):
         if not self.animals:

@@ -33,17 +33,11 @@ def main():
 
     elif starting_selection == '2':
         '''add 5 random enclosures with compatible animal, and one of each staff'''
-        # Utilities.generate_random_zoo(go)
-        pass
+        go.get_random_zoo()
     else:
-        animal_choice = input('How many animals would you like? ')
-        for animal in animal_choice:
-            '''add random animals plus respective biomes/enclosures'''
-            pass
-        staff_choice = input('How many staff would you like? ')
-        for staff in staff_choice:
-            '''add random staff'''
-            pass
+        #TODO add admin to start the zoo
+        pass
+
     go.is_open()
 
 
@@ -136,24 +130,55 @@ class ZooManager:
               f'\n{len(new_staff)} Staff hired.')
 
     def get_random_zoo(self):
-        print('--- Generating Random Zoo ---')
+        '''add 5 random enclosures with compatible animal, and one of each staff'''
+        print('\n--- Generating Random Zoo (5 Enclosures, 3 Staff, Random Animals) ---')
 
-        # 1. Random Enclosures
-        for i in range(5):
-            random_biome = random.choice(Enclosure.Enclosure.biomes)
+        #Hire 3 staff one of each role
+        new_staff_members = [Zookeeper(), Veterinarian(), Admin()]
+        for staff in new_staff_members:
+            self.all_staff.append(staff)
+            print(f'Hired {staff.name} as a {staff.function}.')
 
-            enc = Enclosure.Enclosure(f'Habitat {i + 1}', random_biome, area=random.randint(500, 2000))
-            self.all_enclosures.append(enc)
+        #Randomise 5 biomes
+        possible_biomes = Enclosure.Enclosure.biomes
+        random.shuffle(possible_biomes)
+        biomes_to_use = possible_biomes[:5]
 
-        # 2. Random Animals
-        for enc in self.all_enclosures:
-            if random.random() > 0.5:
-                pass
+        #Random Enclosure names
+        enclosure_name_pool = ['Eunoia', 'Zephyr', 'Halcyon', 'Kalon', 'Elysian', 'Terra', 'Aether']
+        random.shuffle(enclosure_name_pool)
 
-                # 3. Random Staff
-        # ... similar logic ...
+        #Setup for enclosures, picking random sizes
+        for index, biome in enumerate(biomes_to_use):
+            name = f'{biome} {enclosure_name_pool[index]} Habitat'
+            area = random.randint(50, 200)
+            new_enclosure = Enclosure.Enclosure(name, biome, area)
+            self.all_enclosures.append(new_enclosure)
+            print(f'\nBuilt Enclosure: {new_enclosure.name} ({new_enclosure.biome}, {new_enclosure.area}m²)')
+            all_species_names = Animal.Animal.get_all_concrete_animal_types()
 
-        print('Random Zoo Created!')
+            for enclosure in self.all_enclosures:
+                animals_added_count = 0
+                num_animals_to_add = random.randint(1, 3)
+
+                for number in range(num_animals_to_add):
+                    for attempt in range(5):
+                        species_name = random.choice(all_species_names)
+                        try:
+                            animal_class = getattr(Animal, species_name)
+                            temp_animal = animal_class(name=None)
+                            success, number = enclosure.add_animal(temp_animal)
+                            if success:
+                                self.all_animals.append(temp_animal)
+                                animals_added_count += 1
+                        except AttributeError:
+                            continue
+                if animals_added_count > 0:
+                    print(f'    - Successfully added {animals_added_count} animal(s) to {enclosure.name}.')
+                else:
+                    print(f'    - Failed to place any animals in {enclosure.name}.')
+
+            print('\n--- Random Zoo Generation Complete! ---')
 
     def menu_main(self):
         '''Holds the main menu for driving down to sub-menus'''
@@ -215,7 +240,6 @@ class ZooManager:
         for job, names in jobs.items():
             print(f'**{job}** ({len(names)}): {', '.join(names)}')
 
-    # TODO staff can only perform a number of actions, then you will need more staff or things will get dirty
     def sick_animals_list(self):
         sick_animals = []
         for animal in self.all_animals:
@@ -229,28 +253,35 @@ class ZooManager:
         for staff in self.all_staff:
             print(f'* {staff.name} is a(n) {staff.function}')
         staff_selection = input('Which staff would you like to command? ').capitalize()
-        staff.speak()
         for staff in self.all_staff:
             if staff.name == staff_selection:
-                print('What would you have them do')
-                if staff.function == Veterinarian:
-                    if self.sick_animals_list.sick_animals() > 0:
-                        for animal in self.all_animals:
-                            print(f'* {animal.name} is a(n) {animal.function}')
+                found = True
+                if found:
+                    staff.speak()
+                    print('What would you have them do?')
+                    if staff.function == 'Veterinarian':
+                        if self.sick_animals_list:
+                            for animal in self.sick_animals_list():
+                                print(f'* {animal.name} the {animal.function} is sick')
+                        else:
+                            print('There are no sick animals')
+                            return
 
+                    elif staff.function == 'Zookeeper':
+                        # clean or feed#Zookeeper = clean and feed
+                        pass
 
-                    else:
-                        print('There are no sick animals')
-                        return
-
-                elif staff.function == Zookeeper:
-                    #clean or feed#Zookeeper = clean and feed
-                    pass
-                elif staff.function == Admin:
-                    print('Don\'t be silly, admin staff dont do anything')
-
-            else:
-                print('There is no staff member with that name')
+                    elif staff.function == 'Admin':
+                        admin_actions = input('\n1. Drink Coffee'
+                                              '\n2. Complain'
+                                              '\nSelection: 2')
+                        if admin_actions == '1':
+                            print(f'** {staff.name} takes a big sip "sluuuuuuuuuuuurp"')
+                        elif admin_actions == '2':
+                            print(f'** {staff.name} sighs deeply, "...Grumble Grumble"')
+                        print()
+                else:
+                    print('There is no staff member with that name')
 
     def menu_staff_add(self):
         '''new staff, random choice name, append all staff'''
@@ -275,7 +306,7 @@ class ZooManager:
             self.all_staff.append(new_staff)
             self.new_staff.append(new_staff)
 
-            print(f'Successfully hired {new_staff.name} as a {new_staff.function}.')
+            print(f'Successfully hired {new_staff.name} as a(n) {new_staff.function}.')
         else:
             print('Invalid staff type selection.')
 
@@ -351,7 +382,7 @@ class ZooManager:
 
     def menu_enclosure_add(self):
         name = input('Enter Enclosure Name: ').title()
-        #TODO requires name to be entered
+        # TODO requires name to be entered
         if name in self.all_enclosures:
             print('Enclosure already exists.')
             return
@@ -479,9 +510,10 @@ class ZooManager:
         available_species = Animal.Animal.get_all_concrete_animal_types()
         print(f'Available Species: {', '.join(available_species)}')
 
-        species_choice = input('Enter the Species name: ')
+        species_choice = input('Enter the Species name: ').title()
         name = input('Enter the Animal\'s Name (Leave blank for random): ')
-        #TODO add animal age when adding to the zoo
+        # TODO add animal age when adding to the zoo
+
         try:
             animal_class = getattr(Animal, species_choice)
             new_animal = animal_class(name if name else None)
@@ -491,9 +523,14 @@ class ZooManager:
             return
 
         suitable_enclosure = None
+        print('Attempting placement in available enclosures...')
         for enclosure in self.all_enclosures:
-            if enclosure.add_animal(new_animal):
+            success, message = enclosure.add_animal(new_animal)
+
+            if success:
                 suitable_enclosure = enclosure
+            else:
+                print(f'   - In {enclosure.name}: {message}')
 
         if suitable_enclosure:
             self.all_animals.append(new_animal)
@@ -502,7 +539,7 @@ class ZooManager:
                 f'New arrival! {new_animal.name} the {new_animal.species} is settling into {suitable_enclosure.name}.')
         else:
             print(f'Unable to home {new_animal.name}. No suitable enclosure found.'
-                  f'\nAdd a new enclosure for this animal first')
+                  f'\nAdd a new enclosure for this animal first.')
 
     # TODO Remove by ID, for animals of same name
     def menu_animals_remove(self):
@@ -555,7 +592,7 @@ class ZooManager:
         self.sick_animal()
         for animal in self.all_enclosures:
             animal.cleanliness -= 5
-
+        # TODO check length of all staff, inform in another admin is required
 
     # TODO with each new day list changes if any, from overnight
     def day_summary(self):
@@ -590,12 +627,11 @@ class ZooManager:
         else:
             print('No new staff were added today')
         print('*----------------------------------*')
+
     def is_open(self):
         while self.open_zoo:
             print()
             self.menu_main()
-
-    # TODO implement way of incrementing days with actions required.
 
     # TODO think of Extra functionality to add to project
 
