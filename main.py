@@ -36,7 +36,6 @@ def main():
         '''add 5 random enclosures with compatible animal, and one of each staff'''
         go.get_random_zoo()
     else:
-        #TODO add admin to start the zoo
         pass
 
     go.is_open()
@@ -249,7 +248,7 @@ class ZooManager:
 
     def menu_main(self):
         '''Holds the main menu for driving down to sub-menus'''
-        while self.open_zoo:
+        while self._open_zoo:
             print(self.menu_items)
             menu_choice = input('Which menu would you like to explore? ')
 
@@ -268,7 +267,7 @@ class ZooManager:
                 return
             elif menu_choice == '9':
                 print('Exiting Zoo Manager, see you next time :)')
-                self.open_zoo = False
+                self._open_zoo = False
 
     def menu_staff(self):
         '''Holds the main staff menu for selecting sub-menus'''
@@ -431,7 +430,7 @@ class ZooManager:
                 new_staff = Staff.Admin(name if name else None)
 
             self.all_staff.append(new_staff)
-            self.new_staff.append(new_staff)
+            self._new_staff.append(new_staff)
 
             print(f'Successfully hired {new_staff.name} as a(n) {new_staff.function}.')
         else:
@@ -562,7 +561,6 @@ class ZooManager:
     def menu_enclosure_add(self):
         print()
         name = input('Enter Enclosure Name: ').title()
-        # TODO requires name to be entered
         if name in self.all_enclosures:
             print('Enclosure already exists.')
             return
@@ -579,7 +577,7 @@ class ZooManager:
         new_enclosure.new_enclosure()
 
         self.all_enclosures.append(new_enclosure)
-        self.new_enclosures.append(new_enclosure)
+        self._new_enclosures.append(new_enclosure)
 
         print(f'Successfully added {new_enclosure.name}!')
 
@@ -693,7 +691,6 @@ class ZooManager:
 
         species_choice = input('Enter the Species name: ').title()
         name = input('Enter the Animal\'s Name (Leave blank for random): ')
-        # TODO add animal age when adding to the zoo
 
         try:
             animal_class = getattr(Animal, species_choice)
@@ -715,14 +712,13 @@ class ZooManager:
 
         if suitable_enclosure:
             self.all_animals.append(new_animal)
-            self.new_animals.append(new_animal)
+            self._new_animals.append(new_animal)
             print(
                 f'New arrival! {new_animal.name} the {new_animal.species} is settling into {suitable_enclosure.name}.')
         else:
             print(f'Unable to home {new_animal.name}. No suitable enclosure found.'
                   f'\nAdd a new enclosure for this animal first.')
 
-    # TODO Remove by ID, for animals of same name
     def menu_animals_remove(self):
         '''Attempts to remove an animal, running all checks.'''
         print('\n--- Animal Release Menu ---')
@@ -761,7 +757,6 @@ class ZooManager:
             animal_dictionary[str(index + 1)] = animal
         return animal_dictionary
 
-    # TODO if an animal gets sick 80% chance another in the enclosure also gets sick if not tended to.. sick for too long die...?
     def sick_animal(self):
         sickness_spread = False
         sick_animals = []

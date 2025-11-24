@@ -59,8 +59,6 @@ class Enclosure:
         print(f'New enclosure added: {self.name}, it\'s a {self.biome} type with a size of {self.area}m²')
         return self
 
-    # TODO when adding new enclosure, check to see if name already exists
-
     def check_size(self, new_animal):
         '''Checks if the animal fits based on size rules.'''
         # Calculate current load
