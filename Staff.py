@@ -42,13 +42,17 @@ class Zookeeper(Staff):
     def speak(self):
         return random.choice(staff_responses)
 
-    def feed_animals(self):
-        pass
+    def feed_animals(self, enclosure):
+        '''Sets the 'fed' status for all animals in the enclosure'''
+        if not enclosure.animals:
+            return f'There are no animals in {enclosure.name} to feed.'
 
-    def clean_enclosure(self):
-        self.menu_enclosures_by_cleanliness(self.name)
-        clean = input('Which enclosure should be cleaned?')
-        pass
+        return f'{self.name} the Zookeeper fed all {len(enclosure.animals)} animals in {enclosure.name}.'
+
+    def clean_enclosure(self, enclosure):
+        '''Sets the enclosure cleanliness to 100'''
+        enclosure.cleanliness = 100
+        return f'{self.name} the Zookeeper successfully cleaned {enclosure.name}. Cleanliness is now 100.'
 
 
 class Veterinarian(Staff):
@@ -59,9 +63,12 @@ class Veterinarian(Staff):
         return 'Who\'s hurt?'
 
     def heal_animal(self, animal):
-        Animal.Animal.list_by_health(self.name)
-        heal = input('Which animal should be healed?')
-        pass
+        '''Sets the animal health to 100.'''
+        if animal.health == 100:
+            return f'{self.name} checked {animal.name} and found them perfectly healthy. No action needed.'
+
+        animal.health = 100
+        return f'{self.name} the Veterinarian healed {animal.name}. Health is now 100.'
 
 
 class Admin(Staff):

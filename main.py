@@ -26,7 +26,8 @@ def main():
     starting_selection = input('What Zoo would you like to create? '
                                '\n1.Default'
                                '\n2.Randomised '
-                               '\n3.Custom\n')
+                               '\n3.Custom'
+                               '\nSelection: ')
 
     if starting_selection == '1':
         go.get_default()
@@ -225,9 +226,19 @@ class ZooManager:
             self.menu_staff_remove()
             return
 
+
     def menu_staff_list_all(self):
-        for staff in self.all_staff:
-            print(f'* {staff.name} is a(n) {staff.function}')
+        '''Lists all staff and returns a dict mapping selection ID to staff object.'''
+        if not self.all_staff:
+            print('No staff members currently hired.')
+            return None
+
+        print('\n--- Available Staff ---')
+        staff_dict = {}
+        for i, staff in enumerate(self.all_staff):
+            print(f'{i + 1}. {staff.name} ({staff.function})')
+            staff_dict[str(i + 1)] = staff
+        return staff_dict
 
     def menu_staff_by_job(self):
         jobs = {}
@@ -238,7 +249,7 @@ class ZooManager:
 
         print('\n--- Staff by Job Role ---')
         for job, names in jobs.items():
-            print(f'**{job}** ({len(names)}): {', '.join(names)}')
+            print(f'**{job}** ({len(names)}): {',  '.join(names)}')
 
     def sick_animals_list(self):
         sick_animals = []
@@ -248,44 +259,94 @@ class ZooManager:
         return sick_animals
 
     def menu_staff_actions(self):
-        '''clean, feed, heal'''
+        print('\n--- Staff Actions Menu ---')
 
-        for staff in self.all_staff:
-            print(f'* {staff.name} is a(n) {staff.function}')
-        staff_selection = input('Which staff would you like to command? ').capitalize()
-        for staff in self.all_staff:
-            if staff.name == staff_selection:
-                found = True
-                if found:
-                    staff.speak()
-                    print('What would you have them do?')
-                    if staff.function == 'Veterinarian':
-                        if self.sick_animals_list:
-                            for animal in self.sick_animals_list():
-                                print(f'* {animal.name} the {animal.function} is sick')
-                        else:
-                            print('There are no sick animals')
-                            return
+        staff_map = self.menu_staff_list_all()
+        if not staff_map:
+            return
 
-                    elif staff.function == 'Zookeeper':
-                        # clean or feed#Zookeeper = clean and feed
-                        pass
+        staff_choice = input('Select staff member ID for action: ')
+        selected_staff = staff_map.get(staff_choice)
 
-                    elif staff.function == 'Admin':
-                        admin_actions = input('\n1. Drink Coffee'
-                                              '\n2. Complain'
-                                              '\nSelection: 2')
-                        if admin_actions == '1':
-                            print(f'** {staff.name} takes a big sip "sluuuuuuuuuuuurp"')
-                        elif admin_actions == '2':
-                            print(f'** {staff.name} sighs deeply, "...Grumble Grumble"')
-                        print()
+        if not selected_staff:
+            print('Invalid staff choice.')
+            return
+
+        # Zookeeper Actions
+        if isinstance(selected_staff, Zookeeper):
+            print(f'\n{selected_staff.name} is a Zookeeper. What action should they perform?')
+            action_choice = input('1. Clean Enclosure'
+                                  '\n2. Feed Animals'
+                                  '\nSelect action: ')
+
+            if action_choice == '1':
+                # Cleaning: Targets dirty enclosures
+                target_map = self.list_dirty_enclosures()
+                if not target_map: return
+
+                target_choice = input('Select enclosure ID to clean: ')
+                target_enclosure = target_map.get(target_choice)
+
+                if target_enclosure:
+                    result = selected_staff.clean_enclosure(target_enclosure)
+                    print(result)
                 else:
-                    print('There is no staff member with that name')
+                    print('Invalid enclosure choice.')
+
+            elif action_choice == '2':
+                # Feeding: Targets all enclosures
+                target_map = self.list_all_enclosures()
+                if not target_map: return
+
+                target_choice = input('Select enclosure ID to feed: ')
+                target_enclosure = target_map.get(target_choice)
+
+                if target_enclosure:
+                    result = selected_staff.feed_animals(target_enclosure)
+                    print(result)
+                else:
+                    print('Invalid enclosure choice.')
+            else:
+                print('Invalid action choice.')
+
+        # Veterinarian Actions
+        elif isinstance(selected_staff, Veterinarian):
+            print(f'\n{selected_staff.name} is a Veterinarian. What action should they perform?')
+
+            # Healing: Targets sick animals
+            target_map = self.list_sick_animals()
+            if not target_map: return
+
+            target_choice = input('Select animal ID to heal: ')
+            target_animal = target_map.get(target_choice)
+
+            if target_animal:
+                result = selected_staff.heal_animal(target_animal)
+                print(result)
+            else:
+                print('Invalid animal ID choice.')
+
+        # Admin Actions
+        elif isinstance(selected_staff, Admin):
+            print(
+                f'\n{selected_staff.name} is an Admin. They handle hiring staff and building enclosures, which are accessed via the main menus.')
+
+        else:
+            print('Staff member selected is of an unknown type.')
+
+
+        # elif staff.function == 'Admin':
+        #     admin_actions = input('\n1. Drink Coffee'
+        #                           '\n2. Complain'
+        #                           '\nSelection: 2')
+        #     if admin_actions == '1':
+        #         print(f'** {staff.name} takes a big sip 'sluuuuuuuuuuuurp'')
+        #     elif admin_actions == '2':
+        #         print(f'** {staff.name} sighs deeply, '...Grumble Grumble'')
 
     def menu_staff_add(self):
         '''new staff, random choice name, append all staff'''
-        print('--- New Staff ---')
+        print('\n--- New Staff ---')
         staff_type = input('Select Staff Type: '
                            '\n1. Zookeeper'
                            '\n2. Veterinarian'
@@ -335,6 +396,7 @@ class ZooManager:
         print(self.enclosure_menu)
 
         staff_menu_input = input('Which Enclosures menu would you like to explore? ')
+
         if staff_menu_input == '1':
             self.menu_enclosures_list_all()
             return
@@ -361,6 +423,7 @@ class ZooManager:
                 enclosure.area = new_size
 
     def menu_enclosures_list_all(self):
+        print()
         if not self.all_enclosures:
             print('No enclosures have been built yet.')
             return
@@ -370,10 +433,41 @@ class ZooManager:
             occupants = enclosure.get_occupants()
             print(f'{index + 1}. {enclosure.name} ({enclosure.biome}, {enclosure.area}m²) - Occupants: {occupants}')
 
+
+    def list_all_enclosures(self):
+        '''Lists all enclosures and returns a dict mapping selection ID to enclosure object.'''
+        if not self.all_enclosures:
+            print('No enclosures in the zoo.')
+            return None
+
+        print('\n--- All Enclosures ---')
+        enclosure_dictionary = {}
+        for index, enclosure in enumerate(self.all_enclosures):
+            occupants = f'({len(enclosure.animals)} animal{'s' if len(enclosure.animals) != 1 else ''})'
+            print(f'{index + 1}. {enclosure.name} {occupants}')
+            enclosure_dictionary[str(index + 1)] = enclosure
+        return enclosure_dictionary
+
     def menu_enclosures_by_biome(self):
         pass
 
+    def list_dirty_enclosures(self, min_cleanliness=80):
+        '''Lists enclosures below a cleanliness threshold and returns a dict mapping selection ID to enclosure object.'''
+        print()
+        dirty_enclosures = [enclosure for enclosure in self.all_enclosures if enclosure.cleanliness < min_cleanliness]
+        if not dirty_enclosures:
+            print('All enclosures are sparkling clean!')
+            return None
+
+        print(f'\n--- Enclosures Needing Cleaning (Cleanliness < {min_cleanliness}) ---')
+        enclosure_dictionary = {}
+        for index, enclosure in enumerate(dirty_enclosures):
+            print(f'{index + 1}. {enclosure.name} (Cleanliness: {enclosure.cleanliness})')
+            enclosure_dictionary[str(index + 1)] = enclosure
+        return enclosure_dictionary
+
     def menu_enclosures_by_cleanliness(self):
+        print()
         enclosure_by_cleanliness = sorted(self.all_enclosures,
                                           key=lambda enclosure: enclosure.cleanliness)
         print('Enclosures by cleanliness:')
@@ -381,6 +475,7 @@ class ZooManager:
             print(f'{index + 1}. {enclosure.name} | Cleanliness: {enclosure.cleanliness}')
 
     def menu_enclosure_add(self):
+        print()
         name = input('Enter Enclosure Name: ').title()
         # TODO requires name to be entered
         if name in self.all_enclosures:
@@ -404,7 +499,7 @@ class ZooManager:
         print(f'Successfully added {new_enclosure.name}!')
 
     def menu_enclosure_remove(self):
-        print('Enclosure Closure')
+        print('\n--- Enclosure Closure ---')
         for enclosure in self.all_enclosures:
             print(f'{enclosure.name}')
 
@@ -445,7 +540,7 @@ class ZooManager:
             return
 
     def menu_animals_list_all(self):
-        print(f'All animals in the Zoo:')
+        print('\nAll animals in the Zoo: ')
         for animal in self.all_animals:
             print(f'* ID: {animal.animal_id} | {animal.name} the {animal.species}')
 
@@ -460,7 +555,7 @@ class ZooManager:
                 plant_diet.append(animal.name)
 
     def menu_animals_by_diet(self):
-        diet_choice = input('Would you like to see:'
+        diet_choice = input('\nWould you like to see:'
                             '\n1. Carnivores'
                             '\n2. Herbivores'
                             '\nSelection: ')
@@ -476,6 +571,7 @@ class ZooManager:
             print('Invalid choice.')
 
     def menu_animals_by_biome(self):
+        print()
         for enclosure in self.all_enclosures:
             print(f'* {enclosure.name} | Biome: {enclosure.biome}')
         target_biome = input('Which biome\'s inhabitants do you want to check? ').capitalize()
@@ -565,6 +661,20 @@ class ZooManager:
             print(f'{animal_to_remove_name} was sent back to the wild! Goodbye...')
         else:
             print(f'Invalid Selection: Animal {animal_to_remove_name} not found.')
+
+    def list_sick_animals(self, max_health=100):
+        '''Lists animals below a max health threshold and returns a dict mapping selection ID to animal object.'''
+        sick_animals = [a for a in self.all_animals if a.health < max_health]
+        if not sick_animals:
+            print('All animals are healthy!')
+            return None
+
+        print(f'\n--- Animals Needing Medical Attention ---')
+        animal_dictionary = {}
+        for index, animal in enumerate(sick_animals):
+            print(f'{index + 1}. ID: {animal.animal_id} | {animal.name} the {animal.species} (Health: {animal.health})')
+            animal_dictionary[str(index + 1)] = animal
+        return animal_dictionary
 
     # TODO if an animal gets sick 80% chance another in the enclosure also gets sick if not tended to.. sick for too long die...?
     def sick_animal(self):
