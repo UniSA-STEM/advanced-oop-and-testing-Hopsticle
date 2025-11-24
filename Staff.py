@@ -51,8 +51,6 @@ class Zookeeper(Staff):
         pass
 
 
-# TODO implement actions that need to be undertaken by staff based on animal health and enclosure cleanliness
-
 class Veterinarian(Staff):
     def __init__(self, name=None):
         super().__init__(name, 'Veterinarian')

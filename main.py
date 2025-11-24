@@ -60,9 +60,6 @@ class ZooManager:
         self.new_enclosures = []
         self.open_zoo = True
 
-
-
-
         self.menu_items = ('---Main Menu---'
                            '\n1. Animals'
                            '\n2. Staff'
@@ -219,25 +216,41 @@ class ZooManager:
             print(f'**{job}** ({len(names)}): {', '.join(names)}')
 
     # TODO staff can only perform a number of actions, then you will need more staff or things will get dirty
+    def sick_animals_list(self):
+        sick_animals = []
+        for animal in self.all_animals:
+            if animal.health <= 0:
+                sick_animals.append(animal.name)
+        return sick_animals
+
     def menu_staff_actions(self):
         '''clean, feed, heal'''
+
         for staff in self.all_staff:
             print(f'* {staff.name} is a(n) {staff.function}')
-        staff_selection = input('Which staff would you like to command? ')
+        staff_selection = input('Which staff would you like to command? ').capitalize()
+        staff.speak()
         for staff in self.all_staff:
             if staff.name == staff_selection:
-                print('What you have them do')
+                print('What would you have them do')
                 if staff.function == Veterinarian:
-                    #heal# Veterinarian = heal
-                    pass
+                    if self.sick_animals_list.sick_animals() > 0:
+                        for animal in self.all_animals:
+                            print(f'* {animal.name} is a(n) {animal.function}')
+
+
+                    else:
+                        print('There are no sick animals')
+                        return
+
                 elif staff.function == Zookeeper:
                     #clean or feed#Zookeeper = clean and feed
                     pass
                 elif staff.function == Admin:
-                    print('Don\'t be silly, admin\'s dont do anything')
+                    print('Don\'t be silly, admin staff dont do anything')
+
             else:
-                print('There is no staff with that name')
-        pass
+                print('There is no staff member with that name')
 
     def menu_staff_add(self):
         '''new staff, random choice name, append all staff'''
@@ -530,7 +543,7 @@ class ZooManager:
 
         if not sickness_spread:
             sick_chance = random.randint(0, 100)
-            if sick_chance > 95:
+            if sick_chance > 90:
                 random_animal = random.choice(list(self.all_animals))
                 random_animal.health = 0
                 print(f'{random_animal.name} is sick and needs to see a Vet')
@@ -546,7 +559,7 @@ class ZooManager:
 
     # TODO with each new day list changes if any, from overnight
     def day_summary(self):
-
+        '''This is used to output a summary of the changes that occurred during the day'''
         print('*----------------------------------*'
               '\nSummary of the day:')
 
