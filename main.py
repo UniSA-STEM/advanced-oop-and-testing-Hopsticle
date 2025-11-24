@@ -55,7 +55,13 @@ class ZooManager:
         self.all_animals = []
         self.all_staff = []
         self.all_enclosures = []
+        self.new_animals = []
+        self.new_staff = []
+        self.new_enclosures = []
         self.open_zoo = True
+
+
+
 
         self.menu_items = ('---Main Menu---'
                            '\n1. Animals'
@@ -168,6 +174,7 @@ class ZooManager:
                 self.menu_enclosures()
                 return
             elif menu_choice == '4':
+                self.day_summary()
                 self.day_increment()
                 return
             elif menu_choice == '9':
@@ -253,6 +260,8 @@ class ZooManager:
                 new_staff = Staff.Admin(name if name else None)
 
             self.all_staff.append(new_staff)
+            self.new_staff.append(new_staff)
+
             print(f'Successfully hired {new_staff.name} as a {new_staff.function}.')
         else:
             print('Invalid staff type selection.')
@@ -329,6 +338,7 @@ class ZooManager:
 
     def menu_enclosure_add(self):
         name = input('Enter Enclosure Name: ').title()
+        #TODO requires name to be entered
         if name in self.all_enclosures:
             print('Enclosure already exists.')
             return
@@ -345,8 +355,9 @@ class ZooManager:
         new_enclosure.new_enclosure()
 
         self.all_enclosures.append(new_enclosure)
+        self.new_enclosures.append(new_enclosure)
 
-        print(f'Successfully added {name}!')
+        print(f'Successfully added {new_enclosure.name}!')
 
     def menu_enclosure_remove(self):
         print('Enclosure Closure')
@@ -457,10 +468,10 @@ class ZooManager:
 
         species_choice = input('Enter the Species name: ')
         name = input('Enter the Animal\'s Name (Leave blank for random): ')
-
+        #TODO add animal age when adding to the zoo
         try:
-            AnimalClass = getattr(Animal, species_choice)
-            new_animal = AnimalClass(name if name else None)
+            animal_class = getattr(Animal, species_choice)
+            new_animal = animal_class(name if name else None)
 
         except (AttributeError, TypeError):
             print(f'Invalid species: {species_choice} or creation error.')
@@ -473,6 +484,7 @@ class ZooManager:
 
         if suitable_enclosure:
             self.all_animals.append(new_animal)
+            self.new_animals.append(new_animal)
             print(
                 f'New arrival! {new_animal.name} the {new_animal.species} is settling into {suitable_enclosure.name}.')
         else:
@@ -531,33 +543,40 @@ class ZooManager:
         for animal in self.all_enclosures:
             animal.cleanliness -= 5
 
+
     # TODO with each new day list changes if any, from overnight
     def day_summary(self):
 
-        print('Summary of the day:')
+        print('*----------------------------------*'
+              '\nSummary of the day:')
+
         if self.new_animals:
+            print()
             print('New Animals Added:')
             for animal in self.new_animals:
-                print(f'\n{animal.name}')
-                self.new_animals = []
-                Animal.Animal.set_animals_by_diet(animal.diet)
+                print(f'* ID: {animal.animal_id} | {animal.name} the {animal.species}')
+            self.new_animals = []
         else:
             print('No new animals were added today')
+
         if self.new_enclosures:
+            print()
             print('New Enclosures Added:')
-            for new in self.new_enclosures:
-                print(f'\n{new.name}')
-                self.new_enclosures = []
+            for enclosure in self.new_enclosures:
+                print(f'{enclosure.name} ({enclosure.biome}, {enclosure.area}m²')
+            self.new_enclosures = []
         else:
             print('No new enclosures were added today')
+
         if self.new_staff:
+            print()
             print('New Staff Added:')
-            for new in self.new_staff:
-                print(f'\n{new.name}')
-                self.new_staff = []
+            for staff in self.new_staff:
+                print(f'* {staff.name} is a(n) {staff.function}')
+            self.new_staff = []
         else:
             print('No new staff were added today')
-
+        print('*----------------------------------*')
     def is_open(self):
         while self.open_zoo:
             print()
